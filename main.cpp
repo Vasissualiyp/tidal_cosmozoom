@@ -78,12 +78,11 @@ int main(int argc, char *argv[]) {
 	short print_array = 0;
 	const char* filename;
 
-	// CLI: pass seed and box size (in # of cells)
-	if (argc < 2) {
+	// CLI: pass path to the parameter file 
+	if (argc < 2)
 		filename = "params.txt";
-	} else {
+	else
 	    filename = argv[1];
-	}
 
 	Parameters params;
 	params.read_params_from_file(filename);
