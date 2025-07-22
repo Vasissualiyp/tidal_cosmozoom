@@ -5,10 +5,7 @@ LFLAGS =
 TARGET = main
 OBJS   = build/main.o
 
-builddir:
-	mkdir build
-
-build/%.o: builddir %.cpp
+build/%.o: %.cpp
 	$(CXX) $(CFLAGS) -c $< -o $@
 
 $(TARGET): $(OBJS)
