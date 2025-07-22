@@ -3,9 +3,11 @@
 #include <fstream>
 #include <iomanip>
 #include <ostream>
+#include <algorithm>
 #include <random>
 
 #define REAL float
+#define STRTOREAL stof
 
 void populate_array_with_random_values(REAL* rand_array, int n, 
 		                               std::uniform_real_distribution<> uniform_dist,
@@ -35,7 +37,7 @@ public:
   float boxsize;
   void read_params_from_file(const char* filename) {
 	  using namespace std;
-  	  string s, t1, t2;
+  	  string s, var_name, var_value;
   	  ifstream f(filename);
 	  char del = '='; // Equation delimiter
   	  if (!f.is_open()) {
@@ -43,45 +45,61 @@ public:
   	  }
 	  while (getline(f, s)) {
 	      stringstream ss(s);
-		  getline(ss, t1, del);
-		  getline(ss, t2, del);
-	      cout << t1 << " = " << t2 << endl;
+		  getline(ss, var_name, del);
+		  getline(ss, var_value, del);
+		  var_name = erase_spaces_in_str(var_name);
+		  var_value = erase_spaces_in_str(var_value);
+		  set_value(var_name, var_value);
+		  //remove_if(var_name.begin(), var_name.end(), isspace);
 	  }
 	  f.close();
   }
-//private:
-  // private members
+private:
+  void set_value(std::string var_name, std::string var_value) {
+	  if (var_name == "n") {
+		  n = stoi(var_value);
+	  } else if (var_name == "seed") {
+		  seed = stoi(var_value);
+	  } else if (var_name == "boxsize") {
+		  boxsize = STRTOREAL(var_value);
+	  }
+  }
+  std::string erase_spaces_in_str(std::string s) {
+      s.erase(std::remove_if(s.begin(), s.end(),
+		                     [](char c) { return std::isspace(c); }),
+	          s.end());
+	  return s;
+  }
 };
 
 
 int main(int argc, char *argv[]) {
   
-	int seed, n;
 	short print_array = 0;
 	const char* filename;
 
 	// CLI: pass seed and box size (in # of cells)
 	if (argc < 2) {
-	    seed = 12345;
-		n = 16;
 		filename = "params.txt";
 	} else {
-	    seed = atoi(argv[1]);
-	    n = atoi(argv[2]);
-	    filename = argv[3];
+	    filename = argv[1];
 	}
 
+	Parameters params;
+	params.read_params_from_file(filename);
+	std::cout << "n = " << params.n << std::endl;
+	std::cout << "seed = " << params.seed << std::endl;
+	std::cout << "boxsize = " << params.boxsize << std::endl;
+	int n = params.n;
 
     // Random number generation
-	std::mt19937 rand_gen(seed);
+	std::mt19937 rand_gen(params.seed);
     std::uniform_real_distribution<> uniform_dist(-1.0, 1.0);
 
 	REAL* rand_array = new REAL[n*n*n];
 	populate_array_with_random_values(rand_array, n, uniform_dist, 
 			                          rand_gen, print_array);
 
-	Parameters params;
-	params.read_params_from_file(filename);
   
     return 0;
 }
