@@ -87,15 +87,12 @@ int main(int argc, char *argv[]) {
 
 	Parameters params;
 	params.read_params_from_file(filename);
-	std::cout << "n = " << params.n << std::endl;
-	std::cout << "seed = " << params.seed << std::endl;
-	std::cout << "boxsize = " << params.boxsize << std::endl;
-	int n = params.n;
 
     // Random number generation
 	std::mt19937 rand_gen(params.seed);
     std::uniform_real_distribution<> uniform_dist(-1.0, 1.0);
 
+	int n = params.n;
 	REAL* rand_array = new REAL[n*n*n];
 	populate_array_with_random_values(rand_array, n, uniform_dist, 
 			                          rand_gen, print_array);
