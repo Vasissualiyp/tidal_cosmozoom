@@ -5,6 +5,9 @@
 #include <random>
 #include "params.hh"
 #include "vars.hh"
+#include "fft.hh"
+
+using FFTW = FFTWTraits<REAL>;
 
 void populate_array_with_random_values(REAL* rand_array, int n, 
 									   std::uniform_real_distribution<> uniform_dist,
@@ -28,7 +31,6 @@ void populate_array_with_random_values(REAL* rand_array, int n,
 }
 
 int main(int argc, char *argv[]) {
-  
 	short print_array = 0;
 	const char* filename;
 
@@ -46,15 +48,18 @@ int main(int argc, char *argv[]) {
 
 	int n = params.get_n();
 	REAL *rand_array = new REAL[n*n*n];
-	FFTW_COMPLEX *rand_array_fft = (FFTW_COMPLEX*)FFTW_MALLOC(sizeof(FFTW_COMPLEX) * n * n * n);
-	populate_array_with_random_values(rand_array, n, uniform_dist, 
-									  rand_gen, print_array);
-
-	FFTW_PLAN plan;
-	plan = FFTW_DFT_R2C_3D(n, n, n, rand_array, 
-								rand_array_fft, 
-								FFTW_ESTIMATE);
-	FFTW_EXECUTE(plan);
+    FFTW::complex_type *rand_array_fft = (FFTW::complex_type*)FFTW::malloc(sizeof(FFTW::complex_type) * n * n * n);
+    
+    populate_array_with_random_values(rand_array, n, uniform_dist, rand_gen, print_array);
+    
+    FFTW::plan_type plan;
+    plan = FFTW::dft_r2c_3d(n, n, n, rand_array, rand_array_fft, FFTW_ESTIMATE);
+    FFTW::execute(plan);
+    
+    // Clean up
+    FFTW::destroy_plan(plan);
+    FFTW::free(rand_array_fft);
+    delete[] rand_array;
 	
 	return 0;
 }
