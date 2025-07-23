@@ -1,3 +1,4 @@
+#pragma once
 #include <fstream>
 #include <cstdlib>
 #include "vars.hh"
@@ -27,4 +28,3 @@ private:
   void calculate_derived_params();
   std::string erase_spaces_in_str(std::string s);
 };
-

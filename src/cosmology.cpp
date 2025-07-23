@@ -4,7 +4,9 @@
 #include <math.h>
 
 // This BBKS function implementation was taken from MUSIC and modified
-inline REAL bbks(REAL k, REAL m_Gamma){
+TransferFunc::TransferFunc(Parameters params) {
+}
+inline REAL TransferFunc::bbks(REAL k, REAL m_Gamma){
 	REAL q, f1, f2;
 	
 	if(k < 1e-7 )
@@ -15,5 +17,4 @@ inline REAL bbks(REAL k, REAL m_Gamma){
 	f2 = 1.0 + q*(3.89 + q*(259.21 + q*(162.771336 + q*2027.16958081)));
 	
 	return f1/sqrt(sqrt(f2));
-	
 }
