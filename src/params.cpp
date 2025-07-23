@@ -15,10 +15,6 @@
 		  boxsize = STRTOREAL(var_value);
 	  }
   }
-  int  Parameters::get_n()       { return n; }
-  int  Parameters::get_seed()    { return seed; }
-  REAL Parameters::get_boxsize() { return boxsize; }
-  REAL Parameters::get_dL()      { return dL; }
   void Parameters::read_params_from_file(const char* filename) {
 	  using namespace std;
   	  string s, var_name, var_value;

@@ -5,10 +5,17 @@
 class Parameters {
 public:
   void read_params_from_file(const char* filename);
-  int  get_n();
-  int  get_seed();
-  REAL get_boxsize();
-  REAL get_dL();
+  template<typename T>
+  T get(const std::string& param_name) {
+    if constexpr (std::is_same_v<T, int>) {
+      if (param_name == "n") return n;
+      if (param_name == "seed") return seed;
+    } else if constexpr (std::is_same_v<T, REAL>) {
+      if (param_name == "boxsize") return boxsize;
+      if (param_name == "dL") return dL;
+    }
+    throw std::invalid_argument("Unknown parameter: " + param_name);
+  }
 private:
   int n;
   int seed;

@@ -42,10 +42,10 @@ int main(int argc, char *argv[]) {
 	params.read_params_from_file(filename);
 
 	// Random number generation
-	std::mt19937 rand_gen(params.get_seed());
+	std::mt19937 rand_gen(params.get<int>("seed"));
 	std::uniform_real_distribution<> uniform_dist(-1.0, 1.0);
 
-	int n = params.get_n();
+	int n = params.get<int>("n");
 	REAL *rand_array = new REAL[n*n*n];
     FFTW::complex_type *rand_array_fft = (FFTW::complex_type*)FFTW::malloc(sizeof(FFTW::complex_type) * n * n * n);
     
