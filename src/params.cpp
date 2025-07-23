@@ -15,9 +15,10 @@
 		  boxsize = STRTOREAL(var_value);
 	  }
   }
-  int  Parameters::get_n() { return n; }
-  int  Parameters::get_seed() { return seed; }
+  int  Parameters::get_n()       { return n; }
+  int  Parameters::get_seed()    { return seed; }
   REAL Parameters::get_boxsize() { return boxsize; }
+  REAL Parameters::get_dL()      { return dL; }
   void Parameters::read_params_from_file(const char* filename) {
 	  using namespace std;
   	  string s, var_name, var_value;
@@ -33,9 +34,12 @@
 		  var_name = erase_spaces_in_str(var_name);
 		  var_value = erase_spaces_in_str(var_value);
 		  set_value(var_name, var_value);
-		  //remove_if(var_name.begin(), var_name.end(), isspace);
 	  }
 	  f.close();
+	  calculate_derived_params();
+  }
+  void Parameters::calculate_derived_params() {
+	  dL = boxsize / n;
   }
   std::string Parameters::erase_spaces_in_str(std::string s) {
       s.erase(std::remove_if(s.begin(), s.end(),

@@ -50,10 +50,11 @@ int main(int argc, char *argv[]) {
 	populate_array_with_random_values(rand_array, n, uniform_dist, 
 									  rand_gen, print_array);
 
-	fftw_plan plan, iplan;
+	fftw_plan plan;
 	plan = fftw_plan_dft_r2c_3d(n, n, n, rand_array, 
 								rand_array_fft, 
 								FFTW_ESTIMATE);
-  
+	fftw_execute(plan);
+	
 	return 0;
 }

@@ -8,11 +8,14 @@ public:
   int  get_n();
   int  get_seed();
   REAL get_boxsize();
+  REAL get_dL();
 private:
   int n;
   int seed;
-  float boxsize;
+  REAL boxsize;
+  REAL dL;
   void set_value(std::string var_name, std::string var_value);
+  void calculate_derived_params();
   std::string erase_spaces_in_str(std::string s);
 };
 
