@@ -2,21 +2,23 @@ CXX    = g++
 CFLAGS = -Wall -Wextra
 LFLAGS = 
 BUILDDIR = build
+SRCDIR = src
 
 TARGET = main
-OBJS   = build/main.o \
-         build/params.o
+OBJS   = $(BUILDDIR)/main.o \
+         $(BUILDDIR)/params.o
+
+all: $(TARGET)
 
 builddir:
 	mkdir -p build
 
-$(BUILDDIR)/%.o: %.cpp | build
+$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp | build
 	$(CXX) $(CFLAGS) -c $< -o $@
 
 $(TARGET): $(OBJS)
 	$(CXX) -o $@ $^ $(LFLAGS)
 
-all: $(OBJS) $(TARGET)
 
 clean:
 	rm -rf $(OBJS)
