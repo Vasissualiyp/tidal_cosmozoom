@@ -1,5 +1,5 @@
 CXX    = g++
-CFLAGS = 
+CFLAGS = -Wall -Wextra
 LFLAGS = 
 BUILDDIR = build
 
