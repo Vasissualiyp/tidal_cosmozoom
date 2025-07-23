@@ -6,7 +6,8 @@ SRCDIR   = src
 
 TARGET = main
 OBJS   = $(BUILDDIR)/main.o \
-         $(BUILDDIR)/params.o
+         $(BUILDDIR)/params.o \
+         $(BUILDDIR)/cosmology.o
 
 all: $(TARGET)
 

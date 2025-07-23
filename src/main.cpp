@@ -5,6 +5,7 @@
 #include "vars.hh"
 #include "params.hh"
 #include "fft.hh"
+#include "cosmology.hh"
 
 using FFTW = FFTWTraits<REAL>;
 
@@ -47,7 +48,8 @@ int main(int argc, char *argv[]) {
 
 	int n = params.get<int>("n");
 	REAL *rand_array = new REAL[n*n*n];
-    FFTW::complex_type *rand_array_fft = (FFTW::complex_type*)FFTW::malloc(sizeof(FFTW::complex_type) * n * n * n);
+	int fftw_c_size = n * n * (n/2 +1); // Size of half-complex fft
+    FFTW::complex_type *rand_array_fft = (FFTW::complex_type*)FFTW::malloc(sizeof(FFTW::complex_type) * fftw_c_size);
     
     populate_array_with_random_values(rand_array, n, uniform_dist, rand_gen, print_array);
     
