@@ -15,12 +15,16 @@
             allowUnfree = true;
           };
         };
+        customFftw_single = pkgs.fftw.override {
+          precision = "single";
+        };
       in
       {
         devShell = pkgs.mkShell {
           buildInputs = with pkgs; [
             gcc
 			fftw
+			customFftw_single
           ];
         };
         shellHook = ''

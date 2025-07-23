@@ -1,6 +1,6 @@
 CXX    = g++
 CFLAGS = -Wall -Wextra
-LFLAGS = -lfftw3
+LFLAGS = -lfftw3 -lfftw3f
 BUILDDIR = build
 SRCDIR   = src
 

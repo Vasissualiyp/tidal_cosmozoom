@@ -46,15 +46,15 @@ int main(int argc, char *argv[]) {
 
 	int n = params.get_n();
 	REAL *rand_array = new REAL[n*n*n];
-	fftw_complex *rand_array_fft = (fftw_complex*)fftw_malloc(sizeof(fftw_complex) * n * n * n);
+	FFTW_COMPLEX *rand_array_fft = (FFTW_COMPLEX*)FFTW_MALLOC(sizeof(FFTW_COMPLEX) * n * n * n);
 	populate_array_with_random_values(rand_array, n, uniform_dist, 
 									  rand_gen, print_array);
 
-	fftw_plan plan;
-	plan = fftw_plan_dft_r2c_3d(n, n, n, rand_array, 
+	FFTW_PLAN plan;
+	plan = FFTW_DFT_R2C_3D(n, n, n, rand_array, 
 								rand_array_fft, 
 								FFTW_ESTIMATE);
-	fftw_execute(plan);
+	FFTW_EXECUTE(plan);
 	
 	return 0;
 }
