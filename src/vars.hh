@@ -1,2 +1,2 @@
-#define REAL float
-#define STRTOREAL stof
+#define REAL double
+#define STRTOREAL stod

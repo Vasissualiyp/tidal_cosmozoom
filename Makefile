@@ -1,6 +1,6 @@
 CXX    = g++
-CFLAGS = -Wall -Wextra -I$(FFTW_PATH)/include
-LFLAGS = -L$(FFTW_PATH)/lib
+CFLAGS = -Wall -Wextra
+LFLAGS = -lfftw3
 BUILDDIR = build
 SRCDIR   = src
 

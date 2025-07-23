@@ -15,30 +15,17 @@
             allowUnfree = true;
           };
         };
-        customFftw_single = pkgs.fftw.override {
-          precision = "single";
-          #enableMpi = true;
-          #mpi = pkgs.openmpi;
-        };
-        
-        customFftw_double = pkgs.fftw.override {
-          precision = "double"; 
-          #enableMpi = true;
-          #mpi = pkgs.openmpi;
-        };
       in
       {
         devShell = pkgs.mkShell {
           buildInputs = with pkgs; [
             gcc
-            customFftw_double
-            customFftw_single
+			fftw
           ];
         };
         shellHook = ''
             echo "Welcome to the tidal_cosmozoom development shell!"
             '';
-
-      }
+	  }
     );
 }
