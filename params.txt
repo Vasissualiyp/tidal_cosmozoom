@@ -1,3 +1,4 @@
 n = 16
 boxsize = 2000
 seed = 12345
+m_Gamma = 1e-5

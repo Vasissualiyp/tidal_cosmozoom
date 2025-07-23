@@ -1,3 +1,5 @@
+#pragma once
+#include "vars.hh"
 #include <fftw3.h>
 #include <string>
 #include <cstddef>
@@ -121,3 +123,5 @@ struct FFTWTraits<double> {
         fftw_cleanup();
     }
 };
+
+using FFTW = FFTWTraits<REAL>;
