@@ -1,8 +1,8 @@
 CXX    = g++
-CFLAGS = -Wall -Wextra
-LFLAGS = 
+CFLAGS = -Wall -Wextra -I$(FFTW_PATH)/include
+LFLAGS = -L$(FFTW_PATH)/lib
 BUILDDIR = build
-SRCDIR = src
+SRCDIR   = src
 
 TARGET = main
 OBJS   = $(BUILDDIR)/main.o \
@@ -10,15 +10,14 @@ OBJS   = $(BUILDDIR)/main.o \
 
 all: $(TARGET)
 
-builddir:
-	mkdir -p build
+$(BUILDDIR):
+	mkdir -p $(BUILDDIR)
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp | build
+$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp | $(BUILDDIR)
 	$(CXX) $(CFLAGS) -c $< -o $@
 
 $(TARGET): $(OBJS)
 	$(CXX) -o $@ $^ $(LFLAGS)
-
 
 clean:
 	rm -rf $(OBJS)
