@@ -6,6 +6,18 @@
 #include <iostream>
 #include <iomanip>
 
+  void Parameters::set_value(std::string var_name, std::string var_value) {
+	  if (var_name == "n") {
+		  n = stoi(var_value);
+	  } else if (var_name == "seed") {
+		  seed = stoi(var_value);
+	  } else if (var_name == "boxsize") {
+		  boxsize = STRTOREAL(var_value);
+	  }
+  }
+  int  Parameters::get_n() { return n; }
+  int  Parameters::get_seed() { return seed; }
+  REAL Parameters::get_boxsize() { return boxsize; }
   void Parameters::read_params_from_file(const char* filename) {
 	  using namespace std;
   	  string s, var_name, var_value;
@@ -24,15 +36,6 @@
 		  //remove_if(var_name.begin(), var_name.end(), isspace);
 	  }
 	  f.close();
-  }
-  void Parameters::set_value(std::string var_name, std::string var_value) {
-	  if (var_name == "n") {
-		  n = stoi(var_value);
-	  } else if (var_name == "seed") {
-		  seed = stoi(var_value);
-	  } else if (var_name == "boxsize") {
-		  boxsize = STRTOREAL(var_value);
-	  }
   }
   std::string Parameters::erase_spaces_in_str(std::string s) {
       s.erase(std::remove_if(s.begin(), s.end(),

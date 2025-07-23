@@ -1,7 +1,5 @@
 #include <cstdlib>
 #include <iostream>
-#include <fstream>
-#include <iomanip>
 #include <ostream>
 #include <random>
 #include "params.hh"
@@ -42,10 +40,10 @@ int main(int argc, char *argv[]) {
 	params.read_params_from_file(filename);
 
     // Random number generation
-	std::mt19937 rand_gen(params.seed);
+	std::mt19937 rand_gen(params.get_seed());
     std::uniform_real_distribution<> uniform_dist(-1.0, 1.0);
 
-	int n = params.n;
+	int n = params.get_n();
 	REAL* rand_array = new REAL[n*n*n];
 	populate_array_with_random_values(rand_array, n, uniform_dist, 
 			                          rand_gen, print_array);
