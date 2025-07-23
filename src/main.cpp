@@ -1,10 +1,9 @@
 #include <cstdlib>
 #include <iostream>
 #include <ostream>
-#include <fftw3.h>
 #include <random>
-#include "params.hh"
 #include "vars.hh"
+#include "params.hh"
 #include "fft.hh"
 
 using FFTW = FFTWTraits<REAL>;
