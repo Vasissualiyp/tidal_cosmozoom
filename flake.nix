@@ -43,17 +43,21 @@
 			pkg-config
 		  ];
 		  shellHook = ''
-		  	cmake -B build -G Ninja > /dev/null
+            alias remake="cmake --build build --target clear; cmake -B build -G Ninja; cmake --build build"
+            alias reclean="cmake --build build --target clear"
+            alias bld="cmake -B build -G Ninja; cmake --build build"
 		  	echo "Welcome to the tidal_cosmozoom development shell!"
 		  	echo ""
-		  	echo "To configure the project builder (should already be configured if you use the flake):"
+		  	echo "To configure the project builder:"
 		  	echo "cmake -B build -G Ninja"
 		  	echo ""
-		  	echo "To build the project:"
+		  	echo "To build the project, :"
 		  	echo "cmake --build build"
 		  	echo ""
-		  	echo "To clean the build files:"
+		  	echo "To clean the build files, run reclean, or:"
 		  	echo "cmake --build build --target clear"
+			echo ""
+			echo "run remake to clean and rebuild the project, bld to just build it"
 		  	'';
 		};
 	  }
