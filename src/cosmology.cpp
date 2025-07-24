@@ -41,6 +41,19 @@ void TransferFunc::get_3d_tf_array(FFTW::complex_type* tf_fourier) {
 	    }
 	}
 }
+
+void TransferFunc::convolve_array_with_tf(FFTW::complex_type* array, 
+										  FFTW::complex_type* tf_array_fft) {
+	size_t size_n = static_cast<size_t>(n);
+	for (size_t idx = 0; idx < size_n * size_n * (size_n/2 + 1); ++idx) {
+		const REAL re_in = array[idx][0];
+		const REAL im_in = array[idx][1];
+		const REAL Tk = tf_array_fft[idx][0];
+		
+		array[idx][0] = re_in * Tk;
+		array[idx][1] = im_in * Tk;
+	}
+}
 // This BBKS function implementation was taken from MUSIC and modified
 inline REAL TransferFunc::bbks(REAL k){
 	REAL q, f1, f2;

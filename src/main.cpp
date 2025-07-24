@@ -26,6 +26,7 @@ int main(int argc, char *argv[]) {
 
 	// Allocate arrays
 	int n = params.get<int>("n");
+	size_t size_n = static_cast<size_t>(n);
 	REAL *rand_array = new REAL[n*n*n];
 	int fftw_c_size = n * n * (n/2 +1); // Size of half-complex fft
 	FFTW::complex_type *rand_array_fft = (FFTW::complex_type*)FFTW::malloc(sizeof(FFTW::complex_type) * fftw_c_size);
@@ -42,20 +43,12 @@ int main(int argc, char *argv[]) {
 	// Generate transfer function
 	TransferFunc tf = TransferFunc(params);
 	tf.get_3d_tf_array(tf_array_fft);
-
-	// Convolve white noise with TF in Fourier space 
-	size_t size_n = static_cast<size_t>(n);
-	for (size_t idx = 0; idx < size_n * size_n * (size_n/2 + 1); ++idx) {
-		const REAL re_in = rand_array_fft[idx][0];
-		const REAL im_in = rand_array_fft[idx][1];
-		const REAL Tk = tf_array_fft[idx][0];
-		
-		rand_array_fft[idx][0] = re_in * Tk;
-		rand_array_fft[idx][1] = im_in * Tk;
-	}
+	tf.convolve_array_with_tf(rand_array_fft, tf_array_fft);
 	FFTW::execute(iplan);
+
+	// Renormalize the array
 	for (size_t i = 0; i < size_n * size_n * size_n; i++) {
-		rand_array[i] = rand_array[i]/n/n/n;
+		rand_array[i] = rand_array[i] / (n*n*n);
 	}
 	write_field_to_binary_file(rand_array, n, "array3d.bin");
 	//print_complex_array(rand_array_fft, n, n, n/2+1);
