@@ -1,3 +1,4 @@
-*.o
+*.bin
+*.vtk
 main
 build/*

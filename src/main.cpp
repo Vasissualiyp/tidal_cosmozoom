@@ -29,16 +29,16 @@ void populate_array_with_random_values(REAL* rand_array, int n,
 }
 
 void print_complex_array(FFTW::complex_type* array, int n0, int n1, int n2) {
-    for (int i = 0; i < n0; ++i) {
-        for (int j = 0; j < n1; ++j) {
-            for (int k = 0; k < n2; ++k) {
-                std::cout << "(" << array[i * n1 * n2 + j * n2 + k][0] << ", "
-                          << array[i * n1 * n2 + j * n2 + k][1] << ") ";
-            }
-            std::cout << std::endl;
-        }
-        std::cout << std::endl;
-    }
+	for (int i = 0; i < n0; ++i) {
+		for (int j = 0; j < n1; ++j) {
+			for (int k = 0; k < n2; ++k) {
+				std::cout << "(" << array[i * n1 * n2 + j * n2 + k][0] << ", "
+						  << array[i * n1 * n2 + j * n2 + k][1] << ") ";
+			}
+			std::cout << std::endl;
+		}
+		std::cout << std::endl;
+	}
 }
 
 int main(int argc, char *argv[]) {
@@ -61,16 +61,16 @@ int main(int argc, char *argv[]) {
 	int n = params.get<int>("n");
 	REAL *rand_array = new REAL[n*n*n];
 	int fftw_c_size = n * n * (n/2 +1); // Size of half-complex fft
-    FFTW::complex_type *rand_array_fft = (FFTW::complex_type*)FFTW::malloc(sizeof(FFTW::complex_type) * fftw_c_size);
-    FFTW::complex_type *tf_array_fft = (FFTW::complex_type*)FFTW::malloc(sizeof(FFTW::complex_type) * fftw_c_size);
-    
-    populate_array_with_random_values(rand_array, n, uniform_dist, rand_gen, print_array);
-    
+	FFTW::complex_type *rand_array_fft = (FFTW::complex_type*)FFTW::malloc(sizeof(FFTW::complex_type) * fftw_c_size);
+	FFTW::complex_type *tf_array_fft = (FFTW::complex_type*)FFTW::malloc(sizeof(FFTW::complex_type) * fftw_c_size);
+	
+	populate_array_with_random_values(rand_array, n, uniform_dist, rand_gen, print_array);
+	
 	// Get FFT of random noise
-    FFTW::plan_type plan, iplan;
-    plan = FFTW::dft_r2c_3d(n, n, n, rand_array, rand_array_fft, FFTW_ESTIMATE);
-    plan = FFTW::dft_c2r_3d(n, n, n, rand_array_fft, rand_array, FFTW_ESTIMATE);
-    FFTW::execute(plan);
+	FFTW::plan_type plan, iplan;
+	plan = FFTW::dft_r2c_3d(n, n, n, rand_array, rand_array_fft, FFTW_ESTIMATE);
+	iplan = FFTW::dft_c2r_3d(n, n, n, rand_array_fft, rand_array, FFTW_ESTIMATE);
+	FFTW::execute(plan);
 
 	// Generate transfer function
 	TransferFunc tf = TransferFunc(params);
@@ -86,12 +86,23 @@ int main(int argc, char *argv[]) {
 		rand_array_fft[idx][0] = re_in * Tk;
 		rand_array_fft[idx][1] = im_in * Tk;
 	}
+	FFTW::execute(iplan);
 	//print_complex_array(rand_array_fft, n, n, n/2+1);
-    
-    // Clean up
-    FFTW::destroy_plan(plan);
-    FFTW::free(rand_array_fft);
-    delete[] rand_array;
+	//
+	// Write to binary file
+	std::ofstream outFile("array3d.bin", std::ios::binary);
+	if (outFile) {
+		outFile.write(reinterpret_cast<const char*>(rand_array), n*n*n * sizeof(REAL));
+		outFile.close();
+		std::cout << "File saved successfully.\n";
+	} else {
+		std::cerr << "Error opening file!\n";
+	}
+	
+	// Clean up
+	FFTW::destroy_plan(plan);
+	FFTW::free(rand_array_fft);
+	delete[] rand_array;
 	
 	return 0;
 }

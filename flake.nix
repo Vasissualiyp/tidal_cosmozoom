@@ -15,6 +15,14 @@
 			allowUnfree = true;
 		  };
 		};
+		python = pkgs.python311Packages.python;
+		pythonEnv = (python.withPackages (ps: with ps; [
+		  #healpy # HEALPY IS NOT IN NIXPKGS, SO NEED TO MANUALLY PACKAGE IT!
+		  pandas
+		  matplotlib
+		  numpy
+		  vtk
+		]));
 		customFftw_single = pkgs.fftw.override {
 		  precision = "single";
 		};
@@ -26,10 +34,13 @@
 			fftw
 			vtk
 			customFftw_single
+			pythonEnv
 		  ];
 		};
 		shellHook = ''
 			echo "Welcome to the tidal_cosmozoom development shell!"
+			python -m ipykernel install --user --name=python-env --display-name="Python (Env)"
+
 			'';
 	  }
 	);
