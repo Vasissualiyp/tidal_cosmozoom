@@ -14,8 +14,10 @@
 			seed = stoi(var_value);
 		} else if (var_name == "boxsize") {
 			boxsize = STRTOREAL(var_value);
-		} else if (var_name == "m_Gamma") {
-			m_Gamma = STRTOREAL(var_value);
+		} else if (var_name == "Omega_m") {
+			Omega_m = STRTOREAL(var_value);
+		} else if (var_name == "h") {
+			h = STRTOREAL(var_value);
 		}
 	}
 	void Parameters::read_params_from_file(const char* filename) {

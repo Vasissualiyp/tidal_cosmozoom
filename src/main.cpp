@@ -27,6 +27,17 @@ void populate_array_with_random_values(REAL* rand_array, int n,
 		}
 	}
 }
+void write_field_to_binary_file(REAL* rand_array, int n, std::string filename="array3d.bin") {
+	// Write to binary file
+	std::ofstream outFile(filename, std::ios::binary);
+	if (outFile) {
+		outFile.write(reinterpret_cast<const char*>(rand_array), n*n*n * sizeof(REAL));
+		outFile.close();
+		std::cout << "File saved successfully.\n";
+	} else {
+		std::cerr << "Error opening file!\n";
+	}
+}
 
 void print_complex_array(FFTW::complex_type* array, int n0, int n1, int n2) {
 	for (int i = 0; i < n0; ++i) {
@@ -87,17 +98,11 @@ int main(int argc, char *argv[]) {
 		rand_array_fft[idx][1] = im_in * Tk;
 	}
 	FFTW::execute(iplan);
-	//print_complex_array(rand_array_fft, n, n, n/2+1);
-	//
-	// Write to binary file
-	std::ofstream outFile("array3d.bin", std::ios::binary);
-	if (outFile) {
-		outFile.write(reinterpret_cast<const char*>(rand_array), n*n*n * sizeof(REAL));
-		outFile.close();
-		std::cout << "File saved successfully.\n";
-	} else {
-		std::cerr << "Error opening file!\n";
+	for (size_t i = 0; i < size_n * size_n * size_n; i++) {
+		rand_array[i] = rand_array[i]/n/n/n;
 	}
+	write_field_to_binary_file(rand_array, n, "array3d.bin");
+	//print_complex_array(rand_array_fft, n, n, n/2+1);
 	
 	// Clean up
 	FFTW::destroy_plan(plan);

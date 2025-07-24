@@ -31,7 +31,7 @@ def convert_binary_to_vtk(input_file, output_file, n):
         deep=True,
         array_type=vtk.VTK_FLOAT
     )
-    vtk_array.SetName('scalars')  # Name for the scalar data
+    vtk_array.SetName('overdensity')  # Name for the scalar data
 
     # Create VTK image data structure
     image_data = vtk.vtkImageData()
