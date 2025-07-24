@@ -3,7 +3,6 @@
 #include "fft.hh"
 #include "cosmology.hh"
 #include <math.h>
-#include <iostream>
 
 // Constructor
 TransferFunc::TransferFunc(Parameters params) {
@@ -34,9 +33,6 @@ void TransferFunc::get_3d_tf_array(FFTW::complex_type* tf_fourier) {
 	            // Compute transfer function T(k)
 	            const REAL Tk = bbks(k_mag);
     
-	            std::cout << "Returning BBKS for k=" << k_mag << ". Tk = " << Tk << std::endl;
-	            std::cout << "kx="<< kx << ", ky=" << ky << ", kz=" << kz << std::endl;
-	            
 	            // Store T(k) in complex array (real part only)
 	            const size_t idx = size_k + (size_n/2 + 1) * (size_j + size_n * size_i);
 	            tf_fourier[idx][0] = Tk;  // Real component
