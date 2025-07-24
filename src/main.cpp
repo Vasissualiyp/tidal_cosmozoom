@@ -1,46 +1,12 @@
 #include <cstdlib>
 #include <iostream>
 #include <ostream>
-#include <random>
 #include "vars.hh"
 #include "params.hh"
 #include "write.hh"
 #include "fft.hh"
 #include "cosmology.hh"
-
-void populate_array_with_random_values(REAL* rand_array, int n, 
-									   std::uniform_real_distribution<> uniform_dist,
-									   std::mt19937 rand_gen,
-									   short print_array = 0) {
-	REAL element;
-	for (int i=0; i<n; i++) {
-		for (int j=0; j<n; j++) {
-			for (int k=0; k<n; k++) {
-				*(rand_array + i * n * n + j * n + k) = uniform_dist(rand_gen);
-				element = rand_array[i*n*n + j*n + k];
-				if (print_array == 1) {
-					std::cout << element << " ";
-				}
-			}
-			if (print_array == 1) {
-				std::cout << std::endl;
-			}
-		}
-	}
-}
-
-void print_complex_array(FFTW::complex_type* array, int n0, int n1, int n2) {
-	for (int i = 0; i < n0; ++i) {
-		for (int j = 0; j < n1; ++j) {
-			for (int k = 0; k < n2; ++k) {
-				std::cout << "(" << array[i * n1 * n2 + j * n2 + k][0] << ", "
-						  << array[i * n1 * n2 + j * n2 + k][1] << ") ";
-			}
-			std::cout << std::endl;
-		}
-		std::cout << std::endl;
-	}
-}
+#include "random.hh"
 
 int main(int argc, char *argv[]) {
 	short print_array = 0;
