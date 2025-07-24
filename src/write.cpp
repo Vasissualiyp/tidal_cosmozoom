@@ -11,7 +11,7 @@ void write_field_to_binary_file(REAL* rand_array, int n, std::string filename) {
 	if (outFile) {
 		outFile.write(reinterpret_cast<const char*>(rand_array), n*n*n * sizeof(REAL));
 		outFile.close();
-		std::cout << "File saved successfully.\n";
+		std::cout << "File " << filename << " saved successfully.\n";
 	} else {
 		std::cerr << "Error opening file!\n";
 	}
