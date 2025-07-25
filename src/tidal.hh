@@ -49,6 +49,17 @@ public:
 	T* zx_ptr(){ return components[6].data(); };
 	T* zy_ptr(){ return components[7].data(); };
 	T* zz_ptr(){ return components[8].data(); };
+
+	// Component-wise pointers (for FFT)
+	void xx_set(size_t idx, T value){ components[0][idx] = value; };
+	void xy_set(size_t idx, T value){ components[1][idx] = value; };
+	void xz_set(size_t idx, T value){ components[2][idx] = value; };
+	void yx_set(size_t idx, T value){ components[3][idx] = value; };
+	void yy_set(size_t idx, T value){ components[4][idx] = value; };
+	void yz_set(size_t idx, T value){ components[5][idx] = value; };
+	void zx_set(size_t idx, T value){ components[6][idx] = value; };
+	void zy_set(size_t idx, T value){ components[7][idx] = value; };
+	void zz_set(size_t idx, T value){ components[8][idx] = value; };
 	
 	// Tensor operations
 	Vector3 eigen_values(size_t i, size_t j, size_t k) {

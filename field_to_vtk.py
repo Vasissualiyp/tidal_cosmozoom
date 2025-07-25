@@ -1,7 +1,7 @@
 import vtk
 from vtk.util import numpy_support
 import numpy as np
-import sys
+import os
 
 # A small utility to convert PeakPatch overdensity field to VTK format, viewable in ParaView
 
@@ -60,7 +60,7 @@ def convert_binaries_to_vtk(output_file, n):
     arrays = []
     # Read binary data
     for field_name in field_names:
-        input_file = field_name + ".bin"
+        input_file = os.path.join("out", field_name + ".bin")
         array = load_scalar_field(input_file, n) 
         arrays.append(array)
     add_arrays_to_vtk(output_file, arrays, 

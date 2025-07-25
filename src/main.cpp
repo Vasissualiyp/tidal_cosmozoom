@@ -1,5 +1,6 @@
 #include <cstdlib>
-#include <complex.h>
+#include <complex>
+#include <iostream>
 #include "vars.hh"
 #include "params.hh"
 #include "write.hh"
@@ -17,6 +18,7 @@ void renormalize_post_fft_array(REAL* rand_array, int n) {
 }
 
 int main(int argc, char *argv[]) {
+	using namespace std::complex_literals;
 	short print_array = 0;
 	const char* filename;
 
@@ -37,13 +39,20 @@ int main(int argc, char *argv[]) {
 	REAL *rand_array = new REAL[n*n*n];
 	REAL *grav_potential = new REAL[n*n*n];
 	TensorField<REAL> TidalTensor(n, n, n);
-	TensorField<std::complex<REAL>> TidalTensor_fft(n, n, n);
 
 	// FFT arrays
 	int fftw_c_size = n * n * (n/2 +1); // Size of half-complex fft
 	FFTW::complex_type *rand_array_fft = (FFTW::complex_type*)FFTW::malloc(sizeof(FFTW::complex_type) * fftw_c_size);
 	FFTW::complex_type *tf_array_fft   = (FFTW::complex_type*)FFTW::malloc(sizeof(FFTW::complex_type) * fftw_c_size);
 	FFTW::complex_type *grav_potential_fft = (FFTW::complex_type*)FFTW::malloc(sizeof(FFTW::complex_type) * fftw_c_size);
+	TensorField<std::complex<REAL>> TidalTensor_fft(n, n, n/2+1);
+	
+	// TEST: Setting tensor fields and reading real/complex numbers from them
+	TidalTensor.xx_set(0, 5.);
+	std::cout << TidalTensor.xx(0) << std::endl;
+	std::complex<REAL> number(0.0, 1.0);
+	TidalTensor_fft.xx_set(0, number);
+	std::cout << TidalTensor_fft.xx(0).imag() << std::endl;
 	
 	populate_array_with_random_values(rand_array, n, uniform_dist, rand_gen, print_array);
 	
@@ -68,8 +77,8 @@ int main(int argc, char *argv[]) {
 
 	renormalize_post_fft_array(rand_array, n);
 	renormalize_post_fft_array(grav_potential, n);
-	write_field_to_binary_file(rand_array, n, "overdensity.bin");
-	write_field_to_binary_file(grav_potential, n, "potential.bin");
+	write_field_to_binary_file(rand_array,     n, "out/overdensity.bin");
+	write_field_to_binary_file(grav_potential, n, "out/potential.bin");
 	//print_complex_array(grav_potential_fft, n, n, n/2+1);
 	
 	// Clean up
