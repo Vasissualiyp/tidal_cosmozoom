@@ -6,6 +6,7 @@
 #include <iostream>
 #include <math.h>
 #include <iomanip>
+#include <ostream>
 
 void Parameters::set_value(std::string var_name, std::string var_value) {
 	if (var_name == "n") {
@@ -22,8 +23,8 @@ void Parameters::set_value(std::string var_name, std::string var_value) {
 }
 void Parameters::read_params_from_file(const char* filename) {
 	using namespace std;
-		string s, var_name, var_value;
-		ifstream f(filename);
+	string s, var_name, var_value;
+	ifstream f(filename);
 	char del = '='; // Equation delimiter
 		if (!f.is_open()) {
 			cerr << "Error opening the file " << filename << "!\n";
