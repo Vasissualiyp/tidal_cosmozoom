@@ -1,5 +1,4 @@
 #include <math.h>
-#include <iostream>
 #include "fft.hh"
 #include "params.hh"
 #include "gravity.hh"
@@ -23,7 +22,6 @@ void solve_poisson_in_fourier_space(FFTW::complex_type* overdensity_fft,
 				const REAL kz = k * dk;
 				size_t size_k = static_cast<size_t>(k);
 				
-				// Wavevector magnitude square
 				REAL k_mag2 = kx*kx + ky*ky + kz*kz;
 
 				// Solve the Poisson

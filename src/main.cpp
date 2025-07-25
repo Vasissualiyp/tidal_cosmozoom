@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <complex.h>
 #include "vars.hh"
 #include "params.hh"
 #include "write.hh"
@@ -35,6 +36,8 @@ int main(int argc, char *argv[]) {
 	int n = params.get<int>("n");
 	REAL *rand_array = new REAL[n*n*n];
 	REAL *grav_potential = new REAL[n*n*n];
+	TensorField<REAL> TidalTensor(n, n, n);
+	TensorField<std::complex<REAL>> TidalTensor_fft(n, n, n);
 
 	// FFT arrays
 	int fftw_c_size = n * n * (n/2 +1); // Size of half-complex fft

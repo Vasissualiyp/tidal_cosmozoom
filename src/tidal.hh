@@ -1,44 +1,62 @@
 #include <Eigen/Dense>
+#include "fft.hh"
 #include "vars.hh"
 #include <vector>
 
-using Tensor3x3 = Eigen::Matrix<REAL, 3, 3>;
-using Vector3 = Eigen::Matrix<REAL, 3, 1>;
 
+template<typename T>
 class TensorField {
 public:
-    // Allocate memory in SoA layout
-    TensorField(size_t nx, size_t ny, size_t nz);
-    
-    // Access tensor at grid point (i, j, k)
-    Tensor3x3 operator()(size_t i, size_t j, size_t k);
-    
-    // Component accessors
-    REAL& xx(size_t idx);
-    REAL& xy(size_t idx);
-    REAL& xz(size_t idx);
-    REAL& yx(size_t idx);
-    REAL& yy(size_t idx);
-    REAL& yz(size_t idx);
-    REAL& zx(size_t idx);
-    REAL& zy(size_t idx);
-    REAL& zz(size_t idx);
-    
-    // Component-wise pointers (for FFT)
-    REAL* xx_ptr();
-    REAL* xy_ptr();
-    REAL* xz_ptr();
-    REAL* yx_ptr();
-    REAL* yy_ptr();
-    REAL* yz_ptr();
-    REAL* zx_ptr();
-    REAL* zy_ptr();
-    REAL* zz_ptr();
-    
-    // Tensor operations
-    Vector3 eigen_values(size_t i, size_t j, size_t k);
+	using Tensor3x3 = Eigen::Matrix<T, 3, 3>;
+	using Vector3 = Eigen::Matrix<T, 3, 1>;
+	// Allocate memory in SoA layout
+	TensorField(size_t nx, size_t ny, size_t nz) 
+		: nx(nx), ny(ny), nz(nz), 
+		  components(9, std::vector<T>(nx * ny * nz)) {}
+	
+
+	
+	// Access tensor at grid point (i, j, k)
+	Tensor3x3 operator()(size_t i, size_t j, size_t k) {
+		//const size_t idx = i + j*nx + k*nx*ny; // Column-major
+		const size_t idx = i*nx*ny + j*ny + k; // Row-major
+		Tensor3x3 tensor;
+		tensor << 
+			xx(idx), xy(idx), xz(idx),
+			yx(idx), yy(idx), yz(idx),
+			zx(idx), zy(idx), zz(idx);
+		return tensor;
+	}
+	
+	// Component accessors
+	T& xx(size_t idx){ return components[0][idx]; };
+	T& xy(size_t idx){ return components[1][idx]; };
+	T& xz(size_t idx){ return components[2][idx]; };
+	T& yx(size_t idx){ return components[3][idx]; };
+	T& yy(size_t idx){ return components[4][idx]; };
+	T& yz(size_t idx){ return components[5][idx]; };
+	T& zx(size_t idx){ return components[6][idx]; };
+	T& zy(size_t idx){ return components[7][idx]; };
+	T& zz(size_t idx){ return components[8][idx]; };
+	
+	// Component-wise pointers (for FFT)
+	T* xx_ptr(){ return components[0].data(); };
+	T* xy_ptr(){ return components[1].data(); };
+	T* xz_ptr(){ return components[2].data(); };
+	T* yx_ptr(){ return components[3].data(); };
+	T* yy_ptr(){ return components[4].data(); };
+	T* yz_ptr(){ return components[5].data(); };
+	T* zx_ptr(){ return components[6].data(); };
+	T* zy_ptr(){ return components[7].data(); };
+	T* zz_ptr(){ return components[8].data(); };
+	
+	// Tensor operations
+	Vector3 eigen_values(size_t i, size_t j, size_t k) {
+		Eigen::SelfAdjointEigenSolver<Tensor3x3> solver((*this)(i,j,k));
+		return solver.eigenvalues();
+	}
 
 private:
-    size_t nx, ny, nz;
-    std::vector<std::vector<REAL>> components;  // [9][nx*ny*nz]
+	size_t nx, ny, nz;
+	std::vector<std::vector<T>> components;  // [9][nx*ny*nz]
 };
