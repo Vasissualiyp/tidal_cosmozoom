@@ -1,8 +1,7 @@
+#pragma once
 #include <Eigen/Dense>
-#include "fft.hh"
-#include "vars.hh"
 #include <vector>
-
+#include <iostream>
 
 template<typename T>
 class TensorField {

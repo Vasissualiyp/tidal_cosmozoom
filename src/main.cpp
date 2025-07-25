@@ -47,13 +47,6 @@ int main(int argc, char *argv[]) {
 	FFTW::complex_type *grav_potential_fft = (FFTW::complex_type*)FFTW::malloc(sizeof(FFTW::complex_type) * fftw_c_size);
 	TensorField<std::complex<REAL>> TidalTensor_fft(n, n, n/2+1);
 	
-	// TEST: Setting tensor fields and reading real/complex numbers from them
-	TidalTensor.xx_set(0, 5.);
-	std::cout << TidalTensor.xx(0) << std::endl;
-	std::complex<REAL> number(0.0, 1.0);
-	TidalTensor_fft.xx_set(0, number);
-	std::cout << TidalTensor_fft.xx(0).imag() << std::endl;
-	
 	populate_array_with_random_values(rand_array, n, uniform_dist, rand_gen, print_array);
 	
 	// Get FFT of random noise
@@ -65,9 +58,12 @@ int main(int argc, char *argv[]) {
 	TransferFunc tf = TransferFunc(params);
 	tf.get_3d_tf_array(tf_array_fft);
 	tf.convolve_array_with_tf(rand_array_fft, tf_array_fft);
+	
+	// Solve for the gravitational potential and tidal fields in the Fourer space
+	solve_poisson_in_fourier_space(rand_array_fft, grav_potential_fft, params);
+	tidal_tensor_from_potential(grav_potential_fft, TidalTensor_fft, params);
 
 	// Obtain the gravitational potential
-	solve_poisson_in_fourier_space(rand_array_fft, grav_potential_fft, params);
 	iplan_potential = FFTW::dft_c2r_3d(n, n, n, grav_potential_fft, grav_potential, FFTW_ESTIMATE);
 	FFTW::execute(iplan_potential);
 
