@@ -6,6 +6,7 @@
 #include "cosmology.hh"
 #include "gravity.hh"
 #include "random.hh"
+#include "tidal.hh"
 
 void renormalize_post_fft_array(REAL* rand_array, int n) {
 	size_t size_n = static_cast<size_t>(n);

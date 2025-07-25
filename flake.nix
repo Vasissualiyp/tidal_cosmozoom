@@ -33,6 +33,7 @@
 			# Code dependencies
 			gcc
 			fftw
+			eigen
 			customFftw_single
 			# Visualsization
 			vtk

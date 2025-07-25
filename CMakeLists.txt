@@ -22,6 +22,7 @@ add_executable(main ${SOURCES})
 
 # Find and link FFTW
 find_package(PkgConfig REQUIRED)
+find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 pkg_check_modules(FFTW REQUIRED fftw3 fftw3f)
 
 # VTK Packages - Currently not used
@@ -46,7 +47,7 @@ set(CMAKE_NINJA_FORCE_RESPONSE_FILE "ON" CACHE BOOL "Force Ninja to use response
 # Link libraries
 target_include_directories(main PRIVATE ${FFTW_INCLUDE_DIRS})
 target_link_directories(main PRIVATE ${FFTW_LIBRARY_DIRS})
-target_link_libraries(main PRIVATE ${FFTW_LIBRARIES})
+target_link_libraries(main PRIVATE ${FFTW_LIBRARIES} Eigen3::Eigen)
 
 # Clean target
 add_custom_target(clear
