@@ -2,6 +2,7 @@
 #include "vars.hh"
 #include <fftw3.h>
 #include <string>
+#include <complex>
 #include <cstddef>
 
 /**
@@ -125,3 +126,8 @@ struct FFTWTraits<double> {
 };
 
 using FFTW = FFTWTraits<REAL>;
+
+void renormalize_post_fft_array(REAL* rand_array, int n);
+void perform_single_tensor_component_fft(REAL* T_ptr, 
+										 std::complex<REAL>* T_ptr_fft, 
+										 int n);

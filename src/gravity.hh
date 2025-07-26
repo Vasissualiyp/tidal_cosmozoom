@@ -12,7 +12,3 @@ void tidal_tensor_from_potential(FFTW::complex_type* potential_fft,
 void ifft_tidal_tensor(TensorField<std::complex<REAL>>& TidalTensor_fft,
 					   TensorField<REAL>& TidalTensor,
 					   Parameters params);
-void perform_single_tensor_component_fft(REAL* T_ptr, 
-										 std::complex<REAL>* T_ptr_fft, 
-										 int n);
-void renormalize_post_fft_array(REAL* rand_array, int n);

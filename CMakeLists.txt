@@ -26,20 +26,20 @@ find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 pkg_check_modules(FFTW REQUIRED fftw3 fftw3f)
 
 # VTK Packages - Currently not used
-find_package(VTK COMPONENTS 
-  CommonColor
-  CommonCore
-  CommonDataModel
-  InteractionStyle
-  RenderingContextOpenGL2
-  RenderingCore
-  RenderingFreeType
-  RenderingGL2PSOpenGL2
-  RenderingOpenGL2
-)
-if (NOT VTK_FOUND)
-  message(FATAL_ERROR "Cube: Unable to find the VTK build folder.")
-endif()
+#find_package(VTK COMPONENTS 
+#  CommonColor
+#  CommonCore
+#  CommonDataModel
+#  InteractionStyle
+#  RenderingContextOpenGL2
+#  RenderingCore
+#  RenderingFreeType
+#  RenderingGL2PSOpenGL2
+#  RenderingOpenGL2
+#)
+#if (NOT VTK_FOUND)
+#  message(FATAL_ERROR "Cube: Unable to find the VTK build folder.")
+#endif()
 
 # Prevent a "command line is too long" failure in Windows.
 set(CMAKE_NINJA_FORCE_RESPONSE_FILE "ON" CACHE BOOL "Force Ninja to use response files.")
