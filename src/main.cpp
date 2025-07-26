@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
 	renormalize_post_fft_array(grav_potential, n);
 	write_field_to_binary_file(rand_array,     n, "out/overdensity.bin");
 	write_field_to_binary_file(grav_potential, n, "out/potential.bin");
-	//TidalTensor.write_tensor_to_binary_files();
+	TidalTensor.write_tensor_to_binary_files();
 	//print_complex_array(grav_potential_fft, n, n, n/2+1);
 	
 	// Clean up

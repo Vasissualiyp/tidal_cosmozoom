@@ -56,7 +56,8 @@ def load_scalar_field(input_file, n):
 
 def convert_binaries_to_vtk(output_file, n):
     
-    field_names = [ 'overdensity', 'potential']
+    field_names = [ 'overdensity', 'potential', 'Txx', 'Txy', 'Txz', 
+                    'Tyx', 'Tyy', 'Tyz', 'Tzx', 'Tzy', 'Tzz' ]
     arrays = []
     # Read binary data
     for field_name in field_names:

@@ -68,25 +68,25 @@ public:
 	}
 
 	void write_tensor_to_binary_files() {
-		//T* xx = xx_ptr();
-		//T* xy = xy_ptr();
-		//T* xz = xz_ptr();
-		//T* yx = yx_ptr();
-		//T* yy = yy_ptr();
-		//T* yz = yz_ptr();
-		//T* zx = zx_ptr();
-		//T* zy = zy_ptr();
-		//T* zz = zz_ptr();
-		//int n = static_cast<int>(nx);
-		//write_field_to_binary_file(xx, n, "out/Txx.bin");
-		//write_field_to_binary_file(xy, n, "out/Txy.bin");
-		//write_field_to_binary_file(xz, n, "out/Txz.bin");
-		//write_field_to_binary_file(yx, n, "out/Tyx.bin");
-		//write_field_to_binary_file(yy, n, "out/Tyy.bin");
-		//write_field_to_binary_file(yz, n, "out/Tyz.bin");
-		//write_field_to_binary_file(zx, n, "out/Tzx.bin");
-		//write_field_to_binary_file(zy, n, "out/Tzy.bin");
-		//write_field_to_binary_file(zz, n, "out/Tzz.bin");
+		T* xx = xx_ptr();
+		T* xy = xy_ptr();
+		T* xz = xz_ptr();
+		T* yx = yx_ptr();
+		T* yy = yy_ptr();
+		T* yz = yz_ptr();
+		T* zx = zx_ptr();
+		T* zy = zy_ptr();
+		T* zz = zz_ptr();
+		int n = static_cast<int>(nx);
+		write_field_to_binary_file(xx, n, "out/Txx.bin");
+		write_field_to_binary_file(xy, n, "out/Txy.bin");
+		write_field_to_binary_file(xz, n, "out/Txz.bin");
+		write_field_to_binary_file(yx, n, "out/Tyx.bin");
+		write_field_to_binary_file(yy, n, "out/Tyy.bin");
+		write_field_to_binary_file(yz, n, "out/Tyz.bin");
+		write_field_to_binary_file(zx, n, "out/Tzx.bin");
+		write_field_to_binary_file(zy, n, "out/Tzy.bin");
+		write_field_to_binary_file(zz, n, "out/Tzz.bin");
 	}
 
 private:
