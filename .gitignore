@@ -3,3 +3,5 @@
 *.vti
 main
 build/*
+bin/*
+out/*.bin
