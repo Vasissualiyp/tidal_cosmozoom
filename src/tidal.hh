@@ -2,6 +2,7 @@
 #include <Eigen/Dense>
 #include <vector>
 #include <iostream>
+#include "write.hh"
 
 template<typename T>
 class TensorField {
@@ -49,7 +50,7 @@ public:
 	T* zy_ptr(){ return components[7].data(); };
 	T* zz_ptr(){ return components[8].data(); };
 
-	// Component-wise pointers (for FFT)
+	// Component setters
 	void xx_set(size_t idx, T value){ components[0][idx] = value; };
 	void xy_set(size_t idx, T value){ components[1][idx] = value; };
 	void xz_set(size_t idx, T value){ components[2][idx] = value; };
@@ -64,6 +65,28 @@ public:
 	Vector3 eigen_values(size_t i, size_t j, size_t k) {
 		Eigen::SelfAdjointEigenSolver<Tensor3x3> solver((*this)(i,j,k));
 		return solver.eigenvalues();
+	}
+
+	void write_tensor_to_binary_files() {
+		//T* xx = xx_ptr();
+		//T* xy = xy_ptr();
+		//T* xz = xz_ptr();
+		//T* yx = yx_ptr();
+		//T* yy = yy_ptr();
+		//T* yz = yz_ptr();
+		//T* zx = zx_ptr();
+		//T* zy = zy_ptr();
+		//T* zz = zz_ptr();
+		//int n = static_cast<int>(nx);
+		//write_field_to_binary_file(xx, n, "out/Txx.bin");
+		//write_field_to_binary_file(xy, n, "out/Txy.bin");
+		//write_field_to_binary_file(xz, n, "out/Txz.bin");
+		//write_field_to_binary_file(yx, n, "out/Tyx.bin");
+		//write_field_to_binary_file(yy, n, "out/Tyy.bin");
+		//write_field_to_binary_file(yz, n, "out/Tyz.bin");
+		//write_field_to_binary_file(zx, n, "out/Tzx.bin");
+		//write_field_to_binary_file(zy, n, "out/Tzy.bin");
+		//write_field_to_binary_file(zz, n, "out/Tzz.bin");
 	}
 
 private:

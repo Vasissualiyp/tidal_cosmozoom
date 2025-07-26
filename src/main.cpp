@@ -10,13 +10,6 @@
 #include "random.hh"
 #include "tidal.hh"
 
-void renormalize_post_fft_array(REAL* rand_array, int n) {
-	size_t size_n = static_cast<size_t>(n);
-	for (size_t i = 0; i < size_n * size_n * size_n; i++) {
-		rand_array[i] = rand_array[i] / (n*n*n);
-	}
-}
-
 int main(int argc, char *argv[]) {
 	using namespace std::complex_literals;
 	short print_array = 0;
@@ -62,6 +55,7 @@ int main(int argc, char *argv[]) {
 	// Solve for the gravitational potential and tidal fields in the Fourer space
 	solve_poisson_in_fourier_space(rand_array_fft, grav_potential_fft, params);
 	tidal_tensor_from_potential(grav_potential_fft, TidalTensor_fft, params);
+	ifft_tidal_tensor(TidalTensor_fft, TidalTensor, params);
 
 	// Obtain the gravitational potential
 	iplan_potential = FFTW::dft_c2r_3d(n, n, n, grav_potential_fft, grav_potential, FFTW_ESTIMATE);
@@ -75,6 +69,7 @@ int main(int argc, char *argv[]) {
 	renormalize_post_fft_array(grav_potential, n);
 	write_field_to_binary_file(rand_array,     n, "out/overdensity.bin");
 	write_field_to_binary_file(grav_potential, n, "out/potential.bin");
+	//TidalTensor.write_tensor_to_binary_files();
 	//print_complex_array(grav_potential_fft, n, n, n/2+1);
 	
 	// Clean up
