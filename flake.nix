@@ -52,7 +52,7 @@
 		  	echo "To configure the project builder:"
 		  	echo "cmake -B build -G Ninja"
 		  	echo ""
-		  	echo "To build the project, :"
+		  	echo "To build the project, run remake, or:"
 		  	echo "cmake --build build"
 		  	echo ""
 		  	echo "To clean the build files, run reclean, or:"
