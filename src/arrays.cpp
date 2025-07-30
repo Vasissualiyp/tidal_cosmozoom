@@ -35,7 +35,7 @@ Parameters cut_boundaries(REAL* pre_cut_arr,
 	return cut_params;
 }
 
-int* find_loc_of_max_in_array(REAL* array, int n) {
+int* find_loc_of_max_in_array(REAL* array, int n, bool max_bool=true) {
 	REAL max = array[0];
 	REAL value;
 	int *max_loc = new int[3];
@@ -47,7 +47,12 @@ int* find_loc_of_max_in_array(REAL* array, int n) {
 			for (int k=0; k<n; k++) {
 				const int idx = i*n*n + j*n + k;
 				value = array[idx];
-				if (value > max) {
+				if (value > max && max_bool == true) {
+					max = value;
+					max_loc[0] = i;
+					max_loc[1] = j;
+					max_loc[2] = k;
+				} else if (value < max) {
 					max = value;
 					max_loc[0] = i;
 					max_loc[1] = j;
@@ -58,5 +63,3 @@ int* find_loc_of_max_in_array(REAL* array, int n) {
 	}
 	return max_loc;
 }
-
-

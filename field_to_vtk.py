@@ -12,7 +12,6 @@ def add_arrays_to_vtk(output_file, arrays, array_names, dimensions, spacing=(1.0
     image_data.SetSpacing(spacing)
     if origin is None:
         origin = tuple([-dim/2 for dim in dimensions])
-        print(f"Set the origin to {origin}")
     image_data.SetOrigin(origin)
 
     # Add each array to the point data

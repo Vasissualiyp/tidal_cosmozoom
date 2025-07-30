@@ -75,8 +75,8 @@ int main(int argc, char *argv[]) {
 	cut_boundaries(rand_array, rand_array_cut, params, dn);
 	//Parameters cut_params = cut_boundaries(rand_array, rand_array_cut, params, dn);
 	//
-	int* max = find_loc_of_max_in_array(grav_potential, n);
-	std::cout << "Location of max potential: " << max[0] << ", " << max[1] << ", " << max[2] << std::endl;
+	int* max_loc = find_loc_of_max_in_array(grav_potential, n, false);
+	shift_array_to_pos<REAL>(grav_potential, max_loc, n);
 	write_field_to_binary_file(rand_array,     n,     "out/overdensity.bin");
 	write_field_to_binary_file(rand_array_cut, n_cut, "out/overdensity_cut.bin");
 	write_field_to_binary_file(grav_potential, n,     "out/potential.bin");
