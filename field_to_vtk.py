@@ -5,11 +5,14 @@ import os
 
 # A small utility to convert PeakPatch overdensity field to VTK format, viewable in ParaView
 
-def add_arrays_to_vtk(output_file, arrays, array_names, dimensions, spacing=(1.0, 1.0, 1.0), origin=(0.0, 0.0, 0.0)):
+def add_arrays_to_vtk(output_file, arrays, array_names, dimensions, spacing=(1.0, 1.0, 1.0), origin=None):
     # Create the VTK image data structure (once)
     image_data = vtk.vtkImageData()
     image_data.SetDimensions(dimensions)
     image_data.SetSpacing(spacing)
+    if origin is None:
+        origin = tuple([-dim/2 for dim in dimensions])
+        print(f"Set the origin to {origin}")
     image_data.SetOrigin(origin)
 
     # Add each array to the point data
