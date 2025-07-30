@@ -8,6 +8,7 @@
 #include "cosmology.hh"
 #include "gravity.hh"
 #include "random.hh"
+#include "arrays.hh"
 #include "tidal.hh"
 
 int main(int argc, char *argv[]) {

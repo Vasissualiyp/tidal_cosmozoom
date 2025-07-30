@@ -5,7 +5,10 @@
 
 class Parameters {
 public:
+  Parameters();
+  Parameters(Parameters &obj);
   void read_params_from_file(const char* filename);
+  void reduce_meshsize(int dn);
   // Parameter getter template
   template<typename T>
   T get(const std::string& param_name) {

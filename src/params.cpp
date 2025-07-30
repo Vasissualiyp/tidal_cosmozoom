@@ -8,6 +8,16 @@
 #include <iomanip>
 #include <ostream>
 
+Parameters::Parameters(){};
+Parameters::Parameters(Parameters &obj) {
+	n = obj.n;
+	seed = obj.seed;
+	boxsize = obj.boxsize;
+	Omega_m = obj.Omega_m;
+	h = obj.h;
+	calculate_derived_params();
+}
+
 void Parameters::set_value(std::string var_name, std::string var_value) {
 	if (var_name == "n") {
 		n = stoi(var_value);
@@ -20,6 +30,10 @@ void Parameters::set_value(std::string var_name, std::string var_value) {
 	} else if (var_name == "h") {
 		h = STRTOREAL(var_value);
 	}
+}
+void Parameters::reduce_meshsize(int dn) {
+	n -= dn;
+	calculate_derived_params();
 }
 void Parameters::read_params_from_file(const char* filename) {
 	using namespace std;
