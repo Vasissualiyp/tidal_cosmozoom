@@ -66,13 +66,17 @@ int main(int argc, char *argv[]) {
 	iplan_dens = FFTW::dft_c2r_3d(n, n, n, rand_array_fft, rand_array, FFTW_ESTIMATE);
 	FFTW::execute(iplan_dens);
 
+	renormalize_post_fft_array(rand_array, n);
+	renormalize_post_fft_array(grav_potential, n);
 	// Cutting the array test
 	int dn = 16;
 	int n_cut = n - 2*dn;
 	REAL *rand_array_cut = new REAL[n_cut*n_cut*n_cut];
-	renormalize_post_fft_array(rand_array, n);
-	renormalize_post_fft_array(grav_potential, n);
-	Parameters cut_params = cut_boundaries(rand_array, rand_array_cut, params, dn);
+	cut_boundaries(rand_array, rand_array_cut, params, dn);
+	//Parameters cut_params = cut_boundaries(rand_array, rand_array_cut, params, dn);
+	//
+	int* max = find_loc_of_max_in_array(grav_potential, n);
+	std::cout << "Location of max potential: " << max[0] << ", " << max[1] << ", " << max[2] << std::endl;
 	write_field_to_binary_file(rand_array,     n,     "out/overdensity.bin");
 	write_field_to_binary_file(rand_array_cut, n_cut, "out/overdensity_cut.bin");
 	write_field_to_binary_file(grav_potential, n,     "out/potential.bin");
