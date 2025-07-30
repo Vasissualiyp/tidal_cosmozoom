@@ -113,32 +113,11 @@ void ifft_tidal_tensor(TensorField<std::complex<REAL>>& TidalTensor_fft,
 					   Parameters params) {
 	using namespace std;
 	int n = params.get<int>("n");
-	REAL* Txx_ptr = TidalTensor.xx_ptr();
-	REAL* Txy_ptr = TidalTensor.xy_ptr();
-	REAL* Txz_ptr = TidalTensor.xz_ptr();
-	REAL* Tyx_ptr = TidalTensor.yx_ptr();
-	REAL* Tyy_ptr = TidalTensor.yy_ptr();
-	REAL* Tyz_ptr = TidalTensor.yz_ptr();
-	REAL* Tzx_ptr = TidalTensor.zx_ptr();
-	REAL* Tzy_ptr = TidalTensor.zy_ptr();
-	REAL* Tzz_ptr = TidalTensor.zz_ptr();
-
-	complex<REAL>* Txx_ptr_fft = TidalTensor_fft.xx_ptr();
-	complex<REAL>* Txy_ptr_fft = TidalTensor_fft.xy_ptr();
-	complex<REAL>* Txz_ptr_fft = TidalTensor_fft.xz_ptr();
-	complex<REAL>* Tyx_ptr_fft = TidalTensor_fft.yx_ptr();
-	complex<REAL>* Tyy_ptr_fft = TidalTensor_fft.yy_ptr();
-	complex<REAL>* Tyz_ptr_fft = TidalTensor_fft.yz_ptr();
-	complex<REAL>* Tzx_ptr_fft = TidalTensor_fft.zx_ptr();
-	complex<REAL>* Tzy_ptr_fft = TidalTensor_fft.zy_ptr();
-	complex<REAL>* Tzz_ptr_fft = TidalTensor_fft.zz_ptr();
-	perform_single_tensor_component_fft(Txx_ptr, Txx_ptr_fft, n);
-	perform_single_tensor_component_fft(Txy_ptr, Txy_ptr_fft, n);
-	perform_single_tensor_component_fft(Txz_ptr, Txz_ptr_fft, n);
-	perform_single_tensor_component_fft(Tyx_ptr, Tyx_ptr_fft, n);
-	perform_single_tensor_component_fft(Tyy_ptr, Tyy_ptr_fft, n);
-	perform_single_tensor_component_fft(Tyz_ptr, Tyz_ptr_fft, n);
-	perform_single_tensor_component_fft(Tzx_ptr, Tzx_ptr_fft, n);
-	perform_single_tensor_component_fft(Tzy_ptr, Tzy_ptr_fft, n);
-	perform_single_tensor_component_fft(Tzz_ptr, Tzz_ptr_fft, n);
+	int num_components = TidalTensor.get_num_components();
+	for (int i=0; i<num_components; i++) {
+		int idx = TidalTensor.tensor_idx_from_component_id(i);
+		REAL* real_pointer = TidalTensor.ptr_by_id_in_tensor(idx);
+		complex<REAL>* fft_pointer = TidalTensor_fft.ptr_by_id_in_tensor(idx);
+		perform_single_tensor_component_fft(real_pointer, fft_pointer, n);
+	}
 }

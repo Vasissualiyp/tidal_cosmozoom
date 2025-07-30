@@ -128,12 +128,15 @@ int main(int argc, char *argv[]) {
 	FFTW::free(overdensity_fft);
 	FFTW::destroy_plan(plan);
 	FFTW::destroy_plan(iplan_dens);
+
+	calculate_and_save_fields_from_overdensity(overdensity, params);
 	
-	int dn = 1;
+	int dn = 10;
+	int smallest_box = 10;
 	int num_boundary_cutoffs = n / dn;
 	for (int i=0; i<num_boundary_cutoffs; i++) {
 		int n_cut = params.get<int>("n") - 2*dn;
-		if (n_cut > 0) {
+		if (n_cut > smallest_box) {
 			REAL *overdensity_cut = new REAL[n_cut*n_cut*n_cut];
 			Parameters cut_params = cut_boundaries(overdensity, overdensity_cut, params, dn);
 			calculate_and_save_fields_from_overdensity(overdensity_cut, cut_params);

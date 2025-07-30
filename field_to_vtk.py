@@ -60,7 +60,7 @@ def convert_binaries_to_vtk(output_file, field_names, n):
     arrays = []
     # Read binary data
     for field_name in field_names:
-        input_file = os.path.join("out", field_name + ".bin")
+        input_file = os.path.join("out", field_name + "." + str(n) + ".bin")
         array = load_scalar_field(input_file, n) 
         arrays.append(array)
     add_arrays_to_vtk(output_file, arrays, 
@@ -68,12 +68,13 @@ def convert_binaries_to_vtk(output_file, field_names, n):
 
 if __name__ == "__main__":
     n = 64
-    output_file = "fields.vti"
     field_names = [ 'overdensity', 'potential', 'Txx', 'Txy', 'Txz', 
                     'Tyy', 'Tyz', 'Tzz' ]
+    output_file = "fields"+str(n)+".vti"
     convert_binaries_to_vtk(output_file, field_names, n)
     print(f"Successfully converted to {output_file}")
-    output_cut = "fields_reduced.vti"
-    dn = 16
-    convert_binaries_to_vtk(output_cut, ['overdensity_cut'], n - 2*dn)
-    print(f"Successfully converted to {output_cut}")
+    n = 44
+    output_file = "fields"+str(n)+".vti"
+    convert_binaries_to_vtk(output_file, field_names, n)
+    print(f"Successfully converted to {output_file}")
+    #convert_binaries_to_vtk(output_cut, ['overdensity_cut'], n - 2*dn)
