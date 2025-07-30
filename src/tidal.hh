@@ -2,6 +2,7 @@
 #include <Eigen/Dense>
 #include <vector>
 #include <iostream>
+#include <array>
 #include "write.hh"
 
 template<typename T>
@@ -10,11 +11,20 @@ public:
 	using Tensor3x3 = Eigen::Matrix<T, 3, 3>;
 	using Vector3 = Eigen::Matrix<T, 3, 1>;
 	// Allocate memory in SoA layout
-	TensorField(size_t nx, size_t ny, size_t nz) 
+	TensorField(size_t nx, size_t ny, size_t nz, bool symmetric=false) 
 		: nx(nx), ny(ny), nz(nz), 
-		  components(9, std::vector<T>(nx * ny * nz)) {}
-	
+		  symmetric(symmetric),
+		  num_components(symmetric ? 6 : 9),
+		  components(num_components, std::vector<T>(nx * ny * nz)) {
+			if (symmetric == true) {
+				tensor_comp_id = {0, 1, 2, 1, 3, 4, 2, 4, 5}; 
+				subscripts = {"xx", "xy", "xz", "yy", "yz", "zz"}; 
+			} else {
+				tensor_comp_id = {0, 1, 2, 3, 4, 5, 6, 7, 8}; 
+				subscripts = {"xx", "xy", "xz", "yx", "yy", "yz", "zx", "zy", "zz"}; 
+			}
 
+		  }
 	
 	// Access tensor at grid point (i, j, k)
 	Tensor3x3 operator()(size_t i, size_t j, size_t k) {
@@ -27,39 +37,50 @@ public:
 			zx(idx), zy(idx), zz(idx);
 		return tensor;
 	}
+
+	bool is_symmetric() { return symmetric; }
 	
 	// Component accessors
-	T& xx(size_t idx){ return components[0][idx]; };
-	T& xy(size_t idx){ return components[1][idx]; };
-	T& xz(size_t idx){ return components[2][idx]; };
-	T& yx(size_t idx){ return components[3][idx]; };
-	T& yy(size_t idx){ return components[4][idx]; };
-	T& yz(size_t idx){ return components[5][idx]; };
-	T& zx(size_t idx){ return components[6][idx]; };
-	T& zy(size_t idx){ return components[7][idx]; };
-	T& zz(size_t idx){ return components[8][idx]; };
+	T& access_by_id_in_tensor(size_t idx, int tensor_component){ 
+		return components[tensor_comp_id[tensor_component]][idx]; 
+	};
+	T& xx(size_t idx){ return access_by_id_in_tensor(idx, 0); };
+	T& xy(size_t idx){ return access_by_id_in_tensor(idx, 1); };
+	T& xz(size_t idx){ return access_by_id_in_tensor(idx, 2); };
+	T& yx(size_t idx){ return access_by_id_in_tensor(idx, 3); };
+	T& yy(size_t idx){ return access_by_id_in_tensor(idx, 4); };
+	T& yz(size_t idx){ return access_by_id_in_tensor(idx, 5); };
+	T& zx(size_t idx){ return access_by_id_in_tensor(idx, 6); };
+	T& zy(size_t idx){ return access_by_id_in_tensor(idx, 7); };
+	T& zz(size_t idx){ return access_by_id_in_tensor(idx, 8); };
 	
 	// Component-wise pointers (for FFT)
-	T* xx_ptr(){ return components[0].data(); };
-	T* xy_ptr(){ return components[1].data(); };
-	T* xz_ptr(){ return components[2].data(); };
-	T* yx_ptr(){ return components[3].data(); };
-	T* yy_ptr(){ return components[4].data(); };
-	T* yz_ptr(){ return components[5].data(); };
-	T* zx_ptr(){ return components[6].data(); };
-	T* zy_ptr(){ return components[7].data(); };
-	T* zz_ptr(){ return components[8].data(); };
+	T* ptr_by_id_in_tensor(int tensor_component){ 
+		return components[tensor_comp_id[tensor_component]].data(); 
+	};
+	T* xx_ptr(){ return ptr_by_id_in_tensor(0); };
+	T* xy_ptr(){ return ptr_by_id_in_tensor(1); };
+	T* xz_ptr(){ return ptr_by_id_in_tensor(2); };
+	T* yx_ptr(){ return ptr_by_id_in_tensor(3); };
+	T* yy_ptr(){ return ptr_by_id_in_tensor(4); };
+	T* yz_ptr(){ return ptr_by_id_in_tensor(5); };
+	T* zx_ptr(){ return ptr_by_id_in_tensor(6); };
+	T* zy_ptr(){ return ptr_by_id_in_tensor(7); };
+	T* zz_ptr(){ return ptr_by_id_in_tensor(8); };
 
 	// Component setters
-	void xx_set(size_t idx, T value){ components[0][idx] = value; };
-	void xy_set(size_t idx, T value){ components[1][idx] = value; };
-	void xz_set(size_t idx, T value){ components[2][idx] = value; };
-	void yx_set(size_t idx, T value){ components[3][idx] = value; };
-	void yy_set(size_t idx, T value){ components[4][idx] = value; };
-	void yz_set(size_t idx, T value){ components[5][idx] = value; };
-	void zx_set(size_t idx, T value){ components[6][idx] = value; };
-	void zy_set(size_t idx, T value){ components[7][idx] = value; };
-	void zz_set(size_t idx, T value){ components[8][idx] = value; };
+	void set_by_id_in_tensor(size_t idx, int tensor_component, T value){ 
+		components[tensor_comp_id[tensor_component]][idx] = value; 
+	};
+	void xx_set(size_t idx, T value){ return set_by_id_in_tensor(idx, 0, value); };
+	void xy_set(size_t idx, T value){ return set_by_id_in_tensor(idx, 1, value); };
+	void xz_set(size_t idx, T value){ return set_by_id_in_tensor(idx, 2, value); };
+	void yx_set(size_t idx, T value){ return set_by_id_in_tensor(idx, 3, value); };
+	void yy_set(size_t idx, T value){ return set_by_id_in_tensor(idx, 4, value); };
+	void yz_set(size_t idx, T value){ return set_by_id_in_tensor(idx, 5, value); };
+	void zx_set(size_t idx, T value){ return set_by_id_in_tensor(idx, 6, value); };
+	void zy_set(size_t idx, T value){ return set_by_id_in_tensor(idx, 7, value); };
+	void zz_set(size_t idx, T value){ return set_by_id_in_tensor(idx, 8, value); };
 	
 	// Tensor operations
 	Vector3 eigen_values(size_t i, size_t j, size_t k) {
@@ -67,29 +88,36 @@ public:
 		return solver.eigenvalues();
 	}
 
-	void write_tensor_to_binary_files() {
-		T* xx = xx_ptr();
-		T* xy = xy_ptr();
-		T* xz = xz_ptr();
-		T* yx = yx_ptr();
-		T* yy = yy_ptr();
-		T* yz = yz_ptr();
-		T* zx = zx_ptr();
-		T* zy = zy_ptr();
-		T* zz = zz_ptr();
-		int n = static_cast<int>(nx);
-		write_field_to_binary_file(xx, n, "out/Txx.bin");
-		write_field_to_binary_file(xy, n, "out/Txy.bin");
-		write_field_to_binary_file(xz, n, "out/Txz.bin");
-		write_field_to_binary_file(yx, n, "out/Tyx.bin");
-		write_field_to_binary_file(yy, n, "out/Tyy.bin");
-		write_field_to_binary_file(yz, n, "out/Tyz.bin");
-		write_field_to_binary_file(zx, n, "out/Tzx.bin");
-		write_field_to_binary_file(zy, n, "out/Tzy.bin");
-		write_field_to_binary_file(zz, n, "out/Tzz.bin");
+	int tensor_idx_from_component_id(int i) {
+		const int n = static_cast<int>(nx);
+		int idx;
+		for (idx = 0; idx < n; idx++) {
+        	if (tensor_comp_id[idx] == i) {
+        		break;
+        	}
+    	}
+		return idx;
 	}
+
+	void write_tensor_to_binary_files(std::string postfix = "") {
+		for (int i=0; i<num_components; i++) {
+		    std::string extension = ".bin";
+		    std::string prefix = "out/T";
+			std::string subscript = subscripts[i];
+			int idx = tensor_idx_from_component_id(i);
+			T* pointer = ptr_by_id_in_tensor(idx);
+			std::string fname = prefix.append(subscript).append(postfix).append(extension);
+			write_field_to_binary_file(pointer, nx, fname);
+		}
+	}
+
+	int get_num_components() { return num_components; }
 
 private:
 	size_t nx, ny, nz;
-	std::vector<std::vector<T>> components;  // [9][nx*ny*nz]
+	bool symmetric;
+	int num_components;
+	std::array<int,9> tensor_comp_id;
+	std::vector<std::string> subscripts;
+	std::vector<std::vector<T>> components;  // [6 or 9][nx*ny*nz] 
 };

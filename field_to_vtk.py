@@ -70,7 +70,7 @@ if __name__ == "__main__":
     n = 64
     output_file = "fields.vti"
     field_names = [ 'overdensity', 'potential', 'Txx', 'Txy', 'Txz', 
-                    'Tyx', 'Tyy', 'Tyz', 'Tzx', 'Tzy', 'Tzz' ]
+                    'Tyy', 'Tyz', 'Tzz' ]
     convert_binaries_to_vtk(output_file, field_names, n)
     print(f"Successfully converted to {output_file}")
     output_cut = "fields_reduced.vti"

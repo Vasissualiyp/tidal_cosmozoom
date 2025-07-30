@@ -32,14 +32,14 @@ int main(int argc, char *argv[]) {
 	int n = params.get<int>("n");
 	REAL *rand_array = new REAL[n*n*n];
 	REAL *grav_potential = new REAL[n*n*n];
-	TensorField<REAL> TidalTensor(n, n, n);
+	TensorField<REAL> TidalTensor(n, n, n, true);
 
 	// FFT arrays
 	int fftw_c_size = n * n * (n/2 +1); // Size of half-complex fft
 	FFTW::complex_type *rand_array_fft = (FFTW::complex_type*)FFTW::malloc(sizeof(FFTW::complex_type) * fftw_c_size);
 	FFTW::complex_type *tf_array_fft   = (FFTW::complex_type*)FFTW::malloc(sizeof(FFTW::complex_type) * fftw_c_size);
 	FFTW::complex_type *grav_potential_fft = (FFTW::complex_type*)FFTW::malloc(sizeof(FFTW::complex_type) * fftw_c_size);
-	TensorField<std::complex<REAL>> TidalTensor_fft(n, n, n/2+1);
+	TensorField<std::complex<REAL>> TidalTensor_fft(n, n, n/2+1, true);
 	
 	populate_array_with_random_values(rand_array, n, uniform_dist, rand_gen, print_array);
 	
@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
 	write_field_to_binary_file(rand_array,     n,     "out/overdensity.bin");
 	write_field_to_binary_file(rand_array_cut, n_cut, "out/overdensity_cut.bin");
 	write_field_to_binary_file(grav_potential, n,     "out/potential.bin");
-	TidalTensor.write_tensor_to_binary_files();
+	TidalTensor.write_tensor_to_binary_files("");
 	delete[] rand_array_cut; 
 	//print_complex_array(grav_potential_fft, n, n, n/2+1);
 	
