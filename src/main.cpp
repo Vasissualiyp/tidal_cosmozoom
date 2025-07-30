@@ -66,11 +66,18 @@ int main(int argc, char *argv[]) {
 	iplan_dens = FFTW::dft_c2r_3d(n, n, n, rand_array_fft, rand_array, FFTW_ESTIMATE);
 	FFTW::execute(iplan_dens);
 
+	// Cutting the array test
+	int dn = 16;
+	int n_cut = n - 2*dn;
+	REAL *rand_array_cut = new REAL[n_cut*n_cut*n_cut];
 	renormalize_post_fft_array(rand_array, n);
 	renormalize_post_fft_array(grav_potential, n);
-	write_field_to_binary_file(rand_array,     n, "out/overdensity.bin");
-	write_field_to_binary_file(grav_potential, n, "out/potential.bin");
+	Parameters cut_params = cut_boundaries(rand_array, rand_array_cut, params, dn);
+	write_field_to_binary_file(rand_array,     n,     "out/overdensity.bin");
+	write_field_to_binary_file(rand_array_cut, n_cut, "out/overdensity_cut.bin");
+	write_field_to_binary_file(grav_potential, n,     "out/potential.bin");
 	TidalTensor.write_tensor_to_binary_files();
+	delete[] rand_array_cut; 
 	//print_complex_array(grav_potential_fft, n, n, n/2+1);
 	
 	// Clean up

@@ -3,10 +3,10 @@
 #include "arrays.hh"
 #include <cassert>
 
-Parameters remove_boundaries(REAL* pre_cut_arr, 
-							 REAL* post_cut_arr,
-							 Parameters params,
-							 int boundary_change) {
+Parameters cut_boundaries(REAL* pre_cut_arr, 
+						  REAL* post_cut_arr,
+						  Parameters params,
+						  int boundary_change) {
 	Parameters cut_params(params);
 	cut_params.reduce_meshsize(2 * boundary_change);
 	int n_pre_cut = params.get<int>("n");

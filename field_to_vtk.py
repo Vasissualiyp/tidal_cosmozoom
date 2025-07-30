@@ -54,10 +54,7 @@ def load_scalar_field(input_file, n):
         raise ValueError(f"Unknown order type: {order}")
     return data_c_order
 
-def convert_binaries_to_vtk(output_file, n):
-    
-    field_names = [ 'overdensity', 'potential', 'Txx', 'Txy', 'Txz', 
-                    'Tyx', 'Tyy', 'Tyz', 'Tzx', 'Tzy', 'Tzz' ]
+def convert_binaries_to_vtk(output_file, field_names, n):
     arrays = []
     # Read binary data
     for field_name in field_names:
@@ -70,5 +67,11 @@ def convert_binaries_to_vtk(output_file, n):
 if __name__ == "__main__":
     n = 64
     output_file = "fields.vti"
-    convert_binaries_to_vtk(output_file, n)
+    field_names = [ 'overdensity', 'potential', 'Txx', 'Txy', 'Txz', 
+                    'Tyx', 'Tyy', 'Tyz', 'Tzx', 'Tzy', 'Tzz' ]
+    convert_binaries_to_vtk(output_file, field_names, n)
     print(f"Successfully converted to {output_file}")
+    output_cut = "fields_reduced.vti"
+    dn = 16
+    convert_binaries_to_vtk(output_cut, ['overdensity_cut'], n - 2*dn)
+    print(f"Successfully converted to {output_cut}")
