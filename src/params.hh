@@ -6,7 +6,10 @@
 class Parameters {
 public:
   Parameters();
-  Parameters(Parameters &obj);
+  Parameters(const Parameters &obj);
+  Parameters(Parameters&& obj) noexcept;
+  Parameters& operator=(const Parameters& obj);
+  Parameters& operator=(const Parameters&& obj) noexcept;
   void read_params_from_file(const char* filename);
   void reduce_meshsize(int dn);
   // Parameter getter template

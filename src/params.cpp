@@ -9,13 +9,43 @@
 #include <ostream>
 
 Parameters::Parameters(){};
-Parameters::Parameters(Parameters &obj) {
+Parameters::Parameters(const Parameters &obj) {
 	n = obj.n;
 	seed = obj.seed;
 	boxsize = obj.boxsize;
 	Omega_m = obj.Omega_m;
 	h = obj.h;
 	calculate_derived_params();
+}
+Parameters::Parameters(Parameters&& obj) noexcept {
+    n       = obj.n;        // No std::move needed for primitives
+    seed    = obj.seed;
+    boxsize = obj.boxsize;
+    Omega_m = obj.Omega_m;
+    h       = obj.h;
+    calculate_derived_params();
+}
+Parameters& Parameters::operator=(const Parameters& obj) {
+    if (this != &obj) {     // Self-assignment check
+        n       = obj.n;
+        seed    = obj.seed;
+        boxsize = obj.boxsize;
+        Omega_m = obj.Omega_m;
+        h       = obj.h;
+        calculate_derived_params();
+    }
+    return *this;
+}
+Parameters& Parameters::operator=(const Parameters&& obj) noexcept {
+    if (this != &obj) {     // Self-assignment check
+        n       = obj.n;
+        seed    = obj.seed;
+        boxsize = obj.boxsize;
+        Omega_m = obj.Omega_m;
+        h       = obj.h;
+        calculate_derived_params();
+    }
+    return *this;
 }
 
 void Parameters::set_value(std::string var_name, std::string var_value) {

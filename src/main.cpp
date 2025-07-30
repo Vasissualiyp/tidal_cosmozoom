@@ -13,6 +13,8 @@
 
 void calculate_and_save_fields_from_overdensity(REAL* overdensity, Parameters params) {
 	int n = params.get<int>("n");
+	std::string postfix = ".";
+	postfix.append(std::to_string(n));
 	REAL *grav_potential = new REAL[n*n*n];
 	TensorField<REAL> TidalTensor(n, n, n, true);
 
@@ -41,9 +43,14 @@ void calculate_and_save_fields_from_overdensity(REAL* overdensity, Parameters pa
 	renormalize_post_fft_array(overdensity, n);
 	renormalize_post_fft_array(grav_potential, n);
 
-	write_field_to_binary_file(overdensity,    n, "out/overdensity.bin");
-	write_field_to_binary_file(grav_potential, n, "out/potential.bin");
-	TidalTensor.write_tensor_to_binary_files("");
+	std::string overdensity_fname = "out/overdensity";
+	std::string potential_fname   = "out/potential";
+	overdensity_fname.append(postfix).append(".bin");
+	potential_fname.append(postfix).append(".bin");
+
+	write_field_to_binary_file(overdensity,    n, overdensity_fname);
+	write_field_to_binary_file(grav_potential, n, potential_fname  );
+	TidalTensor.write_tensor_to_binary_files(postfix);
 
 	FFTW::destroy_plan(plan);
 	FFTW::destroy_plan(iplan_dens);
@@ -122,11 +129,20 @@ int main(int argc, char *argv[]) {
 	FFTW::destroy_plan(plan);
 	FFTW::destroy_plan(iplan_dens);
 	
-	calculate_and_save_fields_from_overdensity(overdensity, params);
+	int dn = 1;
+	int num_boundary_cutoffs = n / dn;
+	for (int i=0; i<num_boundary_cutoffs; i++) {
+		int n_cut = params.get<int>("n") - 2*dn;
+		if (n_cut > 0) {
+			REAL *overdensity_cut = new REAL[n_cut*n_cut*n_cut];
+			Parameters cut_params = cut_boundaries(overdensity, overdensity_cut, params, dn);
+			calculate_and_save_fields_from_overdensity(overdensity_cut, cut_params);
+			delete[] overdensity;
+			overdensity = overdensity_cut;
+			params = cut_params;
+		}
+	}
 	// Cutting the array test
-	//int dn = 16;
-	//int n_cut = n - 2*dn;
-	//REAL *rand_array_cut = new REAL[n_cut*n_cut*n_cut];
 	//cut_boundaries(rand_array, rand_array_cut, params, dn);
 	//Parameters cut_params = cut_boundaries(rand_array, rand_array_cut, params, dn);
 	

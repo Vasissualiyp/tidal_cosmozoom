@@ -1,5 +1,6 @@
 #pragma once
 #include <Eigen/Dense>
+#include <cstdlib>
 #include <vector>
 #include <iostream>
 #include <array>
@@ -25,6 +26,9 @@ public:
 			}
 
 		  }
+
+	~TensorField() {
+	}
 	
 	// Access tensor at grid point (i, j, k)
 	Tensor3x3 operator()(size_t i, size_t j, size_t k) {
