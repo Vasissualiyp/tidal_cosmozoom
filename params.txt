@@ -1,7 +1,7 @@
 n = 64
 dn = 1
 min_n = 20
-padding = 0
+padding = 1
 boxsize = 1000
 seed = 12346
 Omega_m = 0.28

@@ -115,8 +115,8 @@ public:
 		}
 	}
 
-	void print_tensor_table_at_loc(int idx) {
-		std::cout << nx;
+	void print_tensor_table_at_loc(int idx, int n) {
+		std::cout << n;
 		for (int i=0; i<num_components; i++) {
 			int component_idx = tensor_idx_from_component_id(i);
 			T T_value = access_by_id_in_tensor(idx, component_idx);

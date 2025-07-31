@@ -99,7 +99,7 @@ void calculate_and_save_fields_from_overdensity(REAL* overdensity,
 	int center_idx = n/2 * ( n * n + n + 1 );
 	if (print_header==true) 
 		TidalTensor.print_tensor_table_header();
-	TidalTensor.print_tensor_table_at_loc(center_idx);
+	TidalTensor.print_tensor_table_at_loc(center_idx, n_eff);
 
 	FFTW::destroy_plan(plan);
 	FFTW::destroy_plan(iplan_dens);
