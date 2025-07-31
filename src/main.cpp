@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
 		int current_pad = params.get<int>("current_padding");
 		int n_cut = params.get<int>("n") - 2*(dn + current_pad);
 		int n_pad = n_cut + 2*(padding + current_pad);
-		if (n_cut > smallest_box) {
+		if (n_cut >= smallest_box) {
 			REAL *overdensity_cut = new REAL[n_cut*n_cut*n_cut];
 			REAL *overdensity_pad = new REAL[n_pad*n_pad*n_pad];
 
