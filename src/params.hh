@@ -24,6 +24,10 @@ public:
 			if (param_name == "output_logs") return output_logs;
 			if (param_name == "write_fields_to_files") return write_fields_to_files;
 			if (param_name == "print_array") return print_array;
+		} else if constexpr (std::is_same_v<T, bool>) {
+			if (param_name == "output_logs") return (bool)output_logs;
+			if (param_name == "write_fields_to_files") return (bool)write_fields_to_files;
+			if (param_name == "print_array") return (bool)print_array;
 		} else if constexpr (std::is_same_v<T, REAL>) {
 			if (param_name == "boxsize") return boxsize;
 			if (param_name == "Omega_m") return Omega_m;

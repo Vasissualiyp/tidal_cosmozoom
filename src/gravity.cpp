@@ -67,8 +67,8 @@ void calculate_and_save_fields_from_overdensity(REAL* overdensity,
 												Parameters params,
 												bool print_header) {
 	int n = params.get<int>("n");
-	bool write_to_file = (bool)params.get<int>("write_fields_to_files");
-	bool write_output  = (bool)params.get<int>("output_logs");
+	bool write_to_file = params.get<bool>("write_fields_to_files");
+	bool write_output  = params.get<bool>("output_logs");
 	std::string postfix = ".";
 	postfix.append(std::to_string(n));
 	REAL *grav_potential = new REAL[n*n*n];
