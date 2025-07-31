@@ -12,6 +12,7 @@ public:
 	Parameters& operator=(const Parameters&& obj) noexcept;
 	void read_params_from_file(const char* filename);
 	void reduce_meshsize();
+	void increase_meshsize();
 	void set_seed(int seed);
 	// Parameter getter template
 	template<typename T>
@@ -19,6 +20,7 @@ public:
 		if constexpr (std::is_same_v<T, int>) {
 			if (param_name == "n") return n;
 			if (param_name == "dn") return dn;
+			if (param_name == "padding") return padding;
 			if (param_name == "min_n") return min_n;
 			if (param_name == "seed") return seed;
 			if (param_name == "output_logs") return output_logs;
@@ -39,7 +41,7 @@ public:
 		throw std::invalid_argument("Unknown parameter: " + param_name);
 	}
 private:
-	int n, seed, dn, min_n;
+	int n, seed, dn, padding, min_n;
 	int print_array, output_logs, write_fields_to_files;
 	REAL boxsize, Omega_m, h, dk, dL;
 	void set_value(std::string var_name, std::string var_value);

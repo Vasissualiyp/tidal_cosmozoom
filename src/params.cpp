@@ -13,6 +13,7 @@ Parameters::Parameters(const Parameters &obj) {
 	write_fields_to_files = obj.write_fields_to_files;
 	n           = obj.n;
 	dn          = obj.dn;
+	padding     = obj.padding;
 	min_n       = obj.min_n;
 	seed        = obj.seed;
 	output_logs = obj.output_logs;
@@ -26,6 +27,7 @@ Parameters::Parameters(Parameters&& obj) noexcept {
     write_fields_to_files = obj.write_fields_to_files;
     n           = obj.n;        // No std::move needed for primitives
 	dn          = obj.dn;
+	padding     = obj.padding;
 	min_n       = obj.min_n;
     seed        = obj.seed;
     output_logs = obj.output_logs;
@@ -40,6 +42,7 @@ Parameters& Parameters::operator=(const Parameters& obj) {
         write_fields_to_files = obj.write_fields_to_files;
         n           = obj.n;
 		dn          = obj.dn;
+		padding     = obj.padding;
 		min_n       = obj.min_n;
         seed        = obj.seed;
         output_logs = obj.output_logs;
@@ -56,6 +59,7 @@ Parameters& Parameters::operator=(const Parameters&& obj) noexcept {
         write_fields_to_files = obj.write_fields_to_files;
         n           = obj.n;
 		dn          = obj.dn;
+		padding     = obj.padding;
 		min_n       = obj.min_n;
         seed        = obj.seed;
         output_logs = obj.output_logs;
@@ -73,6 +77,8 @@ void Parameters::set_value(std::string var_name, std::string var_value) {
 		n = stoi(var_value);
 	} else if (var_name == "dn") {
 		dn = stoi(var_value);
+	} else if (var_name == "padding") {
+		padding = stoi(var_value);
 	} else if (var_name == "min_n") {
 		min_n = stoi(var_value);
 	} else if (var_name == "seed") {
@@ -96,6 +102,10 @@ void Parameters::set_seed(int seed) {
 }
 void Parameters::reduce_meshsize() {
 	n -= 2*dn;
+	calculate_derived_params();
+}
+void Parameters::increase_meshsize() {
+	n += 2*padding;
 	calculate_derived_params();
 }
 void Parameters::read_params_from_file(const char* filename) {
