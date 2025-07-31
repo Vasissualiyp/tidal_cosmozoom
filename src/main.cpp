@@ -13,6 +13,7 @@
 
 void calculate_and_save_fields_from_overdensity(REAL* overdensity, 
 												Parameters params,
+												bool write_to_file,
 												bool write_output) {
 	int n = params.get<int>("n");
 	std::string postfix = ".";
@@ -45,14 +46,16 @@ void calculate_and_save_fields_from_overdensity(REAL* overdensity,
 	renormalize_post_fft_array(overdensity, n);
 	renormalize_post_fft_array(grav_potential, n);
 
-	std::string overdensity_fname = "out/overdensity";
-	std::string potential_fname   = "out/potential";
-	overdensity_fname.append(postfix).append(".bin");
-	potential_fname.append(postfix).append(".bin");
-
-	write_field_to_binary_file(overdensity,    n, overdensity_fname, write_output);
-	write_field_to_binary_file(grav_potential, n, potential_fname,   write_output);
-	TidalTensor.write_tensor_to_binary_files(postfix, write_output);
+	if (write_to_file==true) {
+		std::string overdensity_fname = "out/overdensity";
+		std::string potential_fname   = "out/potential";
+		overdensity_fname.append(postfix).append(".bin");
+		potential_fname.append(postfix).append(".bin");
+	
+		write_field_to_binary_file(overdensity,    n, overdensity_fname, write_output);
+		write_field_to_binary_file(grav_potential, n, potential_fname,   write_output);
+		TidalTensor.write_tensor_to_binary_files(postfix, write_output);
+	}
 
 	FFTW::destroy_plan(plan);
 	FFTW::destroy_plan(iplan_dens);
@@ -85,6 +88,8 @@ int* get_new_center_from_largest_potential(FFTW::complex_type* overdensity_fft, 
 int main(int argc, char *argv[]) {
 	using namespace std::complex_literals;
 	short print_array = 0;
+	bool write_to_file = false;
+	bool write_out = false;
 	const char* filename;
 
 	// CLI: pass path to the parameter file and read the file
@@ -131,7 +136,7 @@ int main(int argc, char *argv[]) {
 	FFTW::destroy_plan(plan);
 	FFTW::destroy_plan(iplan_dens);
 
-	calculate_and_save_fields_from_overdensity(overdensity, params, false);
+	calculate_and_save_fields_from_overdensity(overdensity, params, write_to_file, write_out);
 	
 	int dn = 10;
 	int smallest_box = 10;
@@ -141,7 +146,8 @@ int main(int argc, char *argv[]) {
 		if (n_cut > smallest_box) {
 			REAL *overdensity_cut = new REAL[n_cut*n_cut*n_cut];
 			Parameters cut_params = cut_boundaries(overdensity, overdensity_cut, params, dn);
-			calculate_and_save_fields_from_overdensity(overdensity_cut, cut_params, false);
+			calculate_and_save_fields_from_overdensity(overdensity_cut, cut_params, 
+													   write_to_file, write_out);
 			delete[] overdensity;
 			overdensity = overdensity_cut;
 			params = cut_params;
