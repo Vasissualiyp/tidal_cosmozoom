@@ -49,20 +49,6 @@ void solve_poisson_in_fourier_space(FFTW::complex_type* overdensity_fft,
 	}
 }
 
-void ifft_tidal_tensor(TensorField<std::complex<REAL>>& TidalTensor_fft,
-					   TensorField<REAL>& TidalTensor,
-					   Parameters params) {
-	using namespace std;
-	int n = params.get<int>("n");
-	int num_components = TidalTensor.get_num_components();
-	for (int i=0; i<num_components; i++) {
-		int idx = TidalTensor.tensor_idx_from_component_id(i);
-		REAL* real_pointer = TidalTensor.ptr_by_id_in_tensor(idx);
-		complex<REAL>* fft_pointer = TidalTensor_fft.ptr_by_id_in_tensor(idx);
-		perform_single_tensor_component_fft(real_pointer, fft_pointer, n);
-	}
-}
-
 void calculate_and_save_fields_from_overdensity(REAL* overdensity, 
 												Parameters params,
 												bool print_header) {

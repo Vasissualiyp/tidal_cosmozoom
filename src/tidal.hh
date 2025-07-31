@@ -145,6 +145,12 @@ private:
 	std::vector<std::vector<T>> components;  // [6 or 9][nx*ny*nz] 
 };
 
+// TEMPLATE END
+
 void tidal_tensor_from_potential(FFTW::complex_type* potential_fft,
 								 TensorField<std::complex<REAL>>& TidalTensor_fft,
 								 Parameters params);
+
+void ifft_tidal_tensor(TensorField<std::complex<REAL>>& TidalTensor_fft,
+					   TensorField<REAL>& TidalTensor,
+					   Parameters params);
