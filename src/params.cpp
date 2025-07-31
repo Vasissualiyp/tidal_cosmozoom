@@ -10,10 +10,12 @@
 
 Parameters::Parameters(){};
 Parameters::Parameters(const Parameters &obj) {
+	write_fields_to_files = obj.write_fields_to_files;
 	n           = obj.n;
 	dn          = obj.dn;
 	min_n       = obj.min_n;
 	seed        = obj.seed;
+	output_logs = obj.output_logs;
 	print_array = obj.print_array;
 	boxsize     = obj.boxsize;
 	Omega_m     = obj.Omega_m;
@@ -21,10 +23,12 @@ Parameters::Parameters(const Parameters &obj) {
 	calculate_derived_params();
 }
 Parameters::Parameters(Parameters&& obj) noexcept {
+    write_fields_to_files = obj.write_fields_to_files;
     n           = obj.n;        // No std::move needed for primitives
 	dn          = obj.dn;
 	min_n       = obj.min_n;
     seed        = obj.seed;
+    output_logs = obj.output_logs;
     print_array = obj.print_array;
     boxsize     = obj.boxsize;
     Omega_m     = obj.Omega_m;
@@ -33,10 +37,12 @@ Parameters::Parameters(Parameters&& obj) noexcept {
 }
 Parameters& Parameters::operator=(const Parameters& obj) {
     if (this != &obj) {     // Self-assignment check
+        write_fields_to_files = obj.write_fields_to_files;
         n           = obj.n;
 		dn          = obj.dn;
 		min_n       = obj.min_n;
         seed        = obj.seed;
+        output_logs = obj.output_logs;
         print_array = obj.print_array;
         boxsize     = obj.boxsize;
         Omega_m     = obj.Omega_m;
@@ -47,10 +53,12 @@ Parameters& Parameters::operator=(const Parameters& obj) {
 }
 Parameters& Parameters::operator=(const Parameters&& obj) noexcept {
     if (this != &obj) {     // Self-assignment check
+        write_fields_to_files = obj.write_fields_to_files;
         n           = obj.n;
 		dn          = obj.dn;
 		min_n       = obj.min_n;
         seed        = obj.seed;
+        output_logs = obj.output_logs;
         print_array = obj.print_array;
         boxsize     = obj.boxsize;
         Omega_m     = obj.Omega_m;
@@ -69,6 +77,10 @@ void Parameters::set_value(std::string var_name, std::string var_value) {
 		min_n = stoi(var_value);
 	} else if (var_name == "seed") {
 		seed = stoi(var_value);
+	} else if (var_name == "write_fields_to_files") {
+		write_fields_to_files = stoi(var_value);
+	} else if (var_name == "output_logs") {
+		output_logs = stoi(var_value);
 	} else if (var_name == "print_array") {
 		print_array = stoi(var_value);
 	} else if (var_name == "boxsize") {

@@ -65,10 +65,10 @@ void ifft_tidal_tensor(TensorField<std::complex<REAL>>& TidalTensor_fft,
 
 void calculate_and_save_fields_from_overdensity(REAL* overdensity, 
 												Parameters params,
-												bool write_to_file,
-												bool write_output,
 												bool print_header) {
 	int n = params.get<int>("n");
+	bool write_to_file = (bool)params.get<int>("write_fields_to_files");
+	bool write_output  = (bool)params.get<int>("output_logs");
 	std::string postfix = ".";
 	postfix.append(std::to_string(n));
 	REAL *grav_potential = new REAL[n*n*n];

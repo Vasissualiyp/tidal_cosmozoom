@@ -4,8 +4,6 @@
 
 int main(int argc, char *argv[]) {
 	using namespace std::complex_literals;
-	bool write_to_file = true;
-	bool write_out = false;
 	const char* filename;
 	int seed;
 
@@ -30,8 +28,7 @@ int main(int argc, char *argv[]) {
 	generate_overdensity_field(overdensity, params);
 
 	bool prepend_header=true;
-	calculate_and_save_fields_from_overdensity(overdensity, params, write_to_file, 
-											   write_out, prepend_header);
+	calculate_and_save_fields_from_overdensity(overdensity, params, prepend_header);
 	
 	int dn = params.get<int>("dn");
 	int smallest_box = params.get<int>("min_n");
@@ -43,8 +40,7 @@ int main(int argc, char *argv[]) {
 			Parameters cut_params = cut_boundaries(overdensity, overdensity_cut, 
 												   params);
 			delete[] overdensity;
-			calculate_and_save_fields_from_overdensity(overdensity_cut, cut_params, 
-													   write_to_file, write_out);
+			calculate_and_save_fields_from_overdensity(overdensity_cut, cut_params);
 			overdensity = overdensity_cut;
 			params = cut_params;
 		}
