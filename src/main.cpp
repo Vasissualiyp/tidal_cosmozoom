@@ -31,18 +31,25 @@ int main(int argc, char *argv[]) {
 	calculate_and_save_fields_from_overdensity(overdensity, params, prepend_header);
 	
 	int dn = params.get<int>("dn");
+	int padding = params.get<int>("padding");
 	int smallest_box = params.get<int>("min_n");
 	int num_boundary_cutoffs = n / dn;
 	for (int i=0; i<num_boundary_cutoffs; i++) {
-		int n_cut = params.get<int>("n") - 2*dn;
+		int current_pad = params.get<int>("current_padding");
+		int n_cut = params.get<int>("n") - 2*(dn + current_pad);
+		int n_pad = n_cut + 2*(padding + current_pad);
 		if (n_cut > smallest_box) {
 			REAL *overdensity_cut = new REAL[n_cut*n_cut*n_cut];
+			REAL *overdensity_pad = new REAL[n_pad*n_pad*n_pad];
 			Parameters cut_params = cut_boundaries(overdensity, overdensity_cut, 
 												   params);
+			Parameters pad_params = cut_boundaries(overdensity_cut, overdensity_pad, 
+												   cut_params);
 			delete[] overdensity;
-			calculate_and_save_fields_from_overdensity(overdensity_cut, cut_params);
-			overdensity = overdensity_cut;
-			params = cut_params;
+			delete[] overdensity_cut;
+			calculate_and_save_fields_from_overdensity(overdensity_pad, pad_params);
+			overdensity = overdensity_pad;
+			params = pad_params;
 		}
 	}
 	

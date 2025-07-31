@@ -11,10 +11,11 @@ Parameters cut_boundaries(REAL* pre_cut_arr,
 	cut_params.reduce_meshsize();
 	int n_pre_cut = params.get<int>("n");
 	int dn = params.get<int>("dn");
+	int current_pad = params.get<int>("current_padding");
 	int n_post_cut = cut_params.get<int>("n");
 	assert(n_post_cut > 0);
-	int lower_bnd = dn;
-	int upper_bnd = n_pre_cut - dn;
+	int lower_bnd = dn + current_pad;
+	int upper_bnd = n_pre_cut - dn - current_pad;
 
 	// Loop through relevant points inside of the pre-cut array
 	int i_post_cut, j_post_cut, k_post_cut;

@@ -11,6 +11,7 @@
 Parameters::Parameters(){};
 Parameters::Parameters(const Parameters &obj) {
 	write_fields_to_files = obj.write_fields_to_files;
+	current_padding = obj.current_padding;
 	n           = obj.n;
 	dn          = obj.dn;
 	padding     = obj.padding;
@@ -25,6 +26,7 @@ Parameters::Parameters(const Parameters &obj) {
 }
 Parameters::Parameters(Parameters&& obj) noexcept {
     write_fields_to_files = obj.write_fields_to_files;
+	current_padding = obj.current_padding;
     n           = obj.n;        // No std::move needed for primitives
 	dn          = obj.dn;
 	padding     = obj.padding;
@@ -40,6 +42,7 @@ Parameters::Parameters(Parameters&& obj) noexcept {
 Parameters& Parameters::operator=(const Parameters& obj) {
     if (this != &obj) {     // Self-assignment check
         write_fields_to_files = obj.write_fields_to_files;
+		current_padding = obj.current_padding;
         n           = obj.n;
 		dn          = obj.dn;
 		padding     = obj.padding;
@@ -57,6 +60,7 @@ Parameters& Parameters::operator=(const Parameters& obj) {
 Parameters& Parameters::operator=(const Parameters&& obj) noexcept {
     if (this != &obj) {     // Self-assignment check
         write_fields_to_files = obj.write_fields_to_files;
+		current_padding = obj.current_padding;
         n           = obj.n;
 		dn          = obj.dn;
 		padding     = obj.padding;
@@ -79,6 +83,8 @@ void Parameters::set_value(std::string var_name, std::string var_value) {
 		dn = stoi(var_value);
 	} else if (var_name == "padding") {
 		padding = stoi(var_value);
+	} else if (var_name == "current_padding") {
+		current_padding = stoi(var_value);
 	} else if (var_name == "min_n") {
 		min_n = stoi(var_value);
 	} else if (var_name == "seed") {
@@ -101,11 +107,12 @@ void Parameters::set_seed(int seed) {
 	seed = seed;
 }
 void Parameters::reduce_meshsize() {
-	n -= 2*dn;
+	n -= 2*(dn + current_padding);
 	calculate_derived_params();
 }
 void Parameters::increase_meshsize() {
 	n += 2*padding;
+	current_padding += padding;
 	calculate_derived_params();
 }
 void Parameters::read_params_from_file(const char* filename) {
@@ -125,6 +132,7 @@ void Parameters::read_params_from_file(const char* filename) {
 		set_value(var_name, var_value);
 	}
 	f.close();
+	current_padding = 0;
 	calculate_derived_params();
 }
 void Parameters::calculate_derived_params() {
