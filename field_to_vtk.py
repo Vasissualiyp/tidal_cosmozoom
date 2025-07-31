@@ -66,15 +66,24 @@ def convert_binaries_to_vtk(output_file, field_names, n):
     add_arrays_to_vtk(output_file, arrays, 
                       field_names, (n, n, n))
 
+def get_all_meshsizes(dir):
+    files = [f for f in os.listdir(dir) if os.path.isfile(os.path.join(dir, f))]
+    mask = [s.find('Txx') for s in files]
+    txx_files = []
+    for file, mask_val in zip(files, mask):
+        if mask_val == 0:
+            txx_files.append(file)
+    meshsizes = [int(s.replace('Txx.','').replace('.bin','')) for s in txx_files]
+    return meshsizes
+
+def create_vti_for_single_meshsize(n):
+    field_names = [ 'overdensity', 'potential', 'Txx', 
+                   'Txy', 'Txz', 'Tyy', 'Tyz', 'Tzz' ]
+    output_file = "fields"+str(n)+".vti"
+    convert_binaries_to_vtk(output_file, field_names, n)
+    print(f"Successfully converted to {output_file}")
+
 if __name__ == "__main__":
-    n = 64
-    field_names = [ 'overdensity', 'potential', 'Txx', 'Txy', 'Txz', 
-                    'Tyy', 'Tyz', 'Tzz' ]
-    output_file = "fields"+str(n)+".vti"
-    convert_binaries_to_vtk(output_file, field_names, n)
-    print(f"Successfully converted to {output_file}")
-    n = 44
-    output_file = "fields"+str(n)+".vti"
-    convert_binaries_to_vtk(output_file, field_names, n)
-    print(f"Successfully converted to {output_file}")
-    #convert_binaries_to_vtk(output_cut, ['overdensity_cut'], n - 2*dn)
+    meshsizes = get_all_meshsizes("out")
+    for n in meshsizes:
+        create_vti_for_single_meshsize(n)

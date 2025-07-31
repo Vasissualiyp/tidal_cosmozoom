@@ -10,9 +10,10 @@ int* find_loc_of_max_in_array(REAL* array, int n, bool max_bool);
 template<typename T>
 void shift_array_to_pos(T*& array, int* pos, int n) {
 	T *shifted_array = new T[n*n*n];
-	int shift_i = n/2 - pos[0];
-	int shift_j = n/2 - pos[1];
-	int shift_k = n/2 - pos[2];
+	int original_center = n/2;
+	int shift_i = original_center - pos[0];
+	int shift_j = original_center - pos[1];
+	int shift_k = original_center - pos[2];
 	int shifted_i, shifted_j, shifted_k;
 	for (int i=0; i<n; i++) {
 		shifted_i = (i + shift_i + n) % n ;

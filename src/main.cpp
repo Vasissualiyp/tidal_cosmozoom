@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <complex>
 #include <iostream>
+#include <algorithm>
 #include "vars.hh"
 #include "params.hh"
 #include "write.hh"
@@ -93,7 +94,7 @@ int* get_new_center_from_largest_potential(FFTW::complex_type* overdensity_fft, 
 int main(int argc, char *argv[]) {
 	using namespace std::complex_literals;
 	short print_array = 0;
-	bool write_to_file = false;
+	bool write_to_file = true;
 	bool write_out = false;
 	const char* filename;
 	int seed;
@@ -160,12 +161,14 @@ int main(int argc, char *argv[]) {
 		int n_cut = params.get<int>("n") - 2*dn;
 		if (n_cut > smallest_box) {
 			REAL *overdensity_cut = new REAL[n_cut*n_cut*n_cut];
+			REAL *overdensity_cut_copy = new REAL[n_cut*n_cut*n_cut];
 			Parameters cut_params = cut_boundaries(overdensity, overdensity_cut, 
 												   params);
-			calculate_and_save_fields_from_overdensity(overdensity_cut, cut_params, 
+			delete[] overdensity;
+			std::copy(overdensity_cut, overdensity_cut+n_cut*n_cut*n_cut, overdensity_cut_copy);
+			calculate_and_save_fields_from_overdensity(overdensity_cut_copy, cut_params, 
 													   write_to_file, write_out,
 													   false);
-			delete[] overdensity;
 			overdensity = overdensity_cut;
 			params = cut_params;
 		}

@@ -1,7 +1,7 @@
 n = 64
-dn = 10
+dn = 1
 min_n = 10
-boxsize = 100
-seed = 12345
+boxsize = 1000
+seed = 12346
 Omega_m = 0.28
 h = 0.7
