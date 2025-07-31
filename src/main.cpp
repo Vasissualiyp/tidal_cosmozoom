@@ -11,7 +11,9 @@
 #include "arrays.hh"
 #include "tidal.hh"
 
-void calculate_and_save_fields_from_overdensity(REAL* overdensity, Parameters params) {
+void calculate_and_save_fields_from_overdensity(REAL* overdensity, 
+												Parameters params,
+												bool write_output) {
 	int n = params.get<int>("n");
 	std::string postfix = ".";
 	postfix.append(std::to_string(n));
@@ -48,9 +50,9 @@ void calculate_and_save_fields_from_overdensity(REAL* overdensity, Parameters pa
 	overdensity_fname.append(postfix).append(".bin");
 	potential_fname.append(postfix).append(".bin");
 
-	write_field_to_binary_file(overdensity,    n, overdensity_fname);
-	write_field_to_binary_file(grav_potential, n, potential_fname  );
-	TidalTensor.write_tensor_to_binary_files(postfix);
+	write_field_to_binary_file(overdensity,    n, overdensity_fname, write_output);
+	write_field_to_binary_file(grav_potential, n, potential_fname,   write_output);
+	TidalTensor.write_tensor_to_binary_files(postfix, write_output);
 
 	FFTW::destroy_plan(plan);
 	FFTW::destroy_plan(iplan_dens);
@@ -129,7 +131,7 @@ int main(int argc, char *argv[]) {
 	FFTW::destroy_plan(plan);
 	FFTW::destroy_plan(iplan_dens);
 
-	calculate_and_save_fields_from_overdensity(overdensity, params);
+	calculate_and_save_fields_from_overdensity(overdensity, params, false);
 	
 	int dn = 10;
 	int smallest_box = 10;
@@ -139,15 +141,12 @@ int main(int argc, char *argv[]) {
 		if (n_cut > smallest_box) {
 			REAL *overdensity_cut = new REAL[n_cut*n_cut*n_cut];
 			Parameters cut_params = cut_boundaries(overdensity, overdensity_cut, params, dn);
-			calculate_and_save_fields_from_overdensity(overdensity_cut, cut_params);
+			calculate_and_save_fields_from_overdensity(overdensity_cut, cut_params, false);
 			delete[] overdensity;
 			overdensity = overdensity_cut;
 			params = cut_params;
 		}
 	}
-	// Cutting the array test
-	//cut_boundaries(rand_array, rand_array_cut, params, dn);
-	//Parameters cut_params = cut_boundaries(rand_array, rand_array_cut, params, dn);
 	
 	// Clean up
 	delete[] overdensity; 
