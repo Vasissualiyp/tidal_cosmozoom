@@ -12,6 +12,7 @@ Parameters::Parameters(){};
 Parameters::Parameters(const Parameters &obj) {
 	write_fields_to_files = obj.write_fields_to_files;
 	current_padding = obj.current_padding;
+	num_bnd_cutoffs = obj.num_bnd_cutoffs;
 	n           = obj.n;
 	dn          = obj.dn;
 	n_eff       = obj.n_eff;
@@ -28,6 +29,7 @@ Parameters::Parameters(const Parameters &obj) {
 Parameters::Parameters(Parameters&& obj) noexcept {
     write_fields_to_files = obj.write_fields_to_files;
 	current_padding = obj.current_padding;
+	num_bnd_cutoffs = obj.num_bnd_cutoffs;
     n           = obj.n;        // No std::move needed for primitives
 	dn          = obj.dn;
 	n_eff       = obj.n_eff;
@@ -45,6 +47,7 @@ Parameters& Parameters::operator=(const Parameters& obj) {
     if (this != &obj) {     // Self-assignment check
         write_fields_to_files = obj.write_fields_to_files;
 		current_padding = obj.current_padding;
+		num_bnd_cutoffs = obj.num_bnd_cutoffs;
         n           = obj.n;
 		dn          = obj.dn;
 		n_eff       = obj.n_eff;
@@ -64,6 +67,7 @@ Parameters& Parameters::operator=(const Parameters&& obj) noexcept {
     if (this != &obj) {     // Self-assignment check
         write_fields_to_files = obj.write_fields_to_files;
 		current_padding = obj.current_padding;
+		num_bnd_cutoffs = obj.num_bnd_cutoffs;
         n           = obj.n;
 		dn          = obj.dn;
 		n_eff       = obj.n_eff;
@@ -85,12 +89,8 @@ void Parameters::set_value(std::string var_name, std::string var_value) {
 		n = stoi(var_value);
 	} else if (var_name == "dn") {
 		dn = stoi(var_value);
-	} else if (var_name == "n_eff") {
-		n_eff = stoi(var_value);
 	} else if (var_name == "padding") {
 		padding = stoi(var_value);
-	} else if (var_name == "current_padding") {
-		current_padding = stoi(var_value);
 	} else if (var_name == "min_n") {
 		min_n = stoi(var_value);
 	} else if (var_name == "seed") {
@@ -146,6 +146,7 @@ void Parameters::read_params_from_file(const char* filename) {
 void Parameters::calculate_derived_params() {
 	dL = boxsize / n;
 	dk = 2.0 * M_PI / boxsize;
+	num_bnd_cutoffs = n / dn;
 }
 std::string Parameters::erase_spaces_in_str(std::string s) {
 s.erase(std::remove_if(s.begin(), s.end(),

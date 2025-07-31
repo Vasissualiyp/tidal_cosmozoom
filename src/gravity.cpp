@@ -51,7 +51,7 @@ void solve_poisson_in_fourier_space(FFTW::complex_type* overdensity_fft,
 
 void calculate_and_save_fields_from_overdensity(REAL* overdensity, 
 												Parameters params,
-												bool print_header) {
+												int print_header) {
 	int n = params.get<int>("n");
 	int n_eff = params.get<int>("n_eff");
 	int write_to_file = params.get<int>("write_fields_to_files");
@@ -97,7 +97,7 @@ void calculate_and_save_fields_from_overdensity(REAL* overdensity,
 		TidalTensor.write_tensor_to_binary_files(n_eff, postfix, write_output);
 	}
 	int center_idx = n/2 * ( n * n + n + 1 );
-	if (print_header==true) 
+	if (print_header==1) 
 		TidalTensor.print_tensor_table_header();
 	TidalTensor.print_tensor_table_at_loc(center_idx, n_eff);
 
@@ -133,9 +133,9 @@ void generate_overdensity_field(REAL*& overdensity, Parameters& params) {
 	tf.get_3d_tf_array(tf_array_fft);
 	tf.convolve_array_with_tf(overdensity_fft, tf_array_fft);
 	FFTW::free(tf_array_fft);
-	int* new_center = get_new_center_from_largest_potential(overdensity_fft, params);
 
-	// Get the overdensity field 
+	// Get the overdensity field, shifted to potential max
+	int* new_center = get_new_center_from_largest_potential(overdensity_fft, params);
 	iplan_dens = FFTW::dft_c2r_3d(n, n, n, overdensity_fft, overdensity, FFTW_ESTIMATE);
 	FFTW::execute(iplan_dens);
 	shift_array_to_pos<REAL>(overdensity, new_center, n);
