@@ -1,7 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include "write.hh"
+#include "io.hh"
 #include "fft.hh"
 #include "vars.hh"
 
@@ -30,5 +30,25 @@ void print_complex_array(FFTW::complex_type* array, int n0, int n1, int n2) {
 		}
 		std::cout << std::endl;
 	}
+}
+
+Parameters obtain_params_from_cli(int argc, char *argv[]) {
+	const char* filename;
+	int seed;
+	if (argc < 2) {
+		filename = "params.txt";
+		seed = 0;
+	} else if (argc == 2) {
+		filename = argv[1];
+		seed = 0;
+	} else {
+		filename = argv[1];
+		seed = atoi(argv[2]);
+	}
+	Parameters params;
+	params.read_params_from_file(filename);
+	if (seed != 0)
+		params.set_seed(seed);
+	return params;
 }
 

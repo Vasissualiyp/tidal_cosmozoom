@@ -32,31 +32,20 @@ void perform_cutting_and_padding(REAL*& overdensity, Parameters& params) {
 }
 
 int main(int argc, char *argv[]) {
-	using namespace std::complex_literals;
-	const char* filename;
-	int seed;
-
-	// CLI: pass path to the parameter file and read the file
-	if (argc < 2) {
-		filename = "params.txt";
-		seed = 0;
-	} else if (argc == 2) {
-		filename = argv[1];
-		seed = 0;
-	} else {
-		filename = argv[1];
-		seed = atoi(argv[2]);
-	}
-	Parameters params;
-	params.read_params_from_file(filename);
-	if (seed != 0)
-		params.set_seed(seed);
-
+	Parameters params = obtain_params_from_cli(argc, argv);
 	int n = params.get<int>("n");
-	REAL *overdensity = new REAL[n*n*n];
+
+    // Generate the overdensity field by convolution of white noise with the
+    // transfer function (BBKS) and shift it to the largest potential value
+    // being centered
+    REAL *overdensity = new REAL[n*n*n];
 	generate_overdensity_field(overdensity, params);
+
+	// Write the Tij table for the full box
 	int prepend_header = 1;
 	calculate_and_save_fields_from_overdensity(overdensity, params, prepend_header);
+
+	// Cut the boundaries of the overdensity, and pad the box afterwards
 	int num_boundary_cutoffs = params.get<int>("num_bnd_cutoffs");
 	for (int i=0; i<num_boundary_cutoffs; i++) {
 		perform_cutting_and_padding(overdensity, params);

@@ -4,7 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <array>
-#include "write.hh"
+#include "io.hh"
 
 template<typename T>
 class TensorField {
