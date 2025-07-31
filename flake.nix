@@ -44,7 +44,7 @@
 			pkg-config
 		  ];
 		  shellHook = ''
-            alias remake="cmake --build build --target clear; cmake -B build -G Ninja; cmake --build build"
+            alias remake="cmake --build build --target clear; cmake -B build -G Ninja; cmake --build build -j 20"
             alias reclean="cmake --build build --target clear"
             alias bld="cmake -B build -G Ninja; cmake --build build"
 		  	echo "Welcome to the tidal_cosmozoom development shell!"

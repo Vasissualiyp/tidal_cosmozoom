@@ -21,6 +21,7 @@ public:
       if (param_name == "dn") return dn;
       if (param_name == "min_n") return min_n;
       if (param_name == "seed") return seed;
+      if (param_name == "print_array") return print_array;
     } else if constexpr (std::is_same_v<T, REAL>) {
       if (param_name == "boxsize") return boxsize;
       if (param_name == "Omega_m") return Omega_m;
@@ -32,7 +33,7 @@ public:
     throw std::invalid_argument("Unknown parameter: " + param_name);
   }
 private:
-  int n, seed, dn, min_n;
+  int n, seed, dn, min_n, print_array;
   REAL boxsize, Omega_m, h, dk, dL;
   void set_value(std::string var_name, std::string var_value);
   void calculate_derived_params();

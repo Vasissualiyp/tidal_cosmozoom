@@ -144,3 +144,7 @@ private:
 	std::vector<std::string> subscripts;
 	std::vector<std::vector<T>> components;  // [6 or 9][nx*ny*nz] 
 };
+
+void tidal_tensor_from_potential(FFTW::complex_type* potential_fft,
+								 TensorField<std::complex<REAL>>& TidalTensor_fft,
+								 Parameters params);
