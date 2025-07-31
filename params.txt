@@ -1,4 +1,6 @@
 n = 64
+dn = 10
+min_n = 10
 boxsize = 100
 seed = 12345
 Omega_m = 0.28

@@ -6,15 +6,15 @@
 
 Parameters cut_boundaries(REAL* pre_cut_arr, 
 						  REAL* post_cut_arr,
-						  Parameters params,
-						  int boundary_change) {
+						  Parameters params) {
 	Parameters cut_params(params);
-	cut_params.reduce_meshsize(2 * boundary_change);
+	cut_params.reduce_meshsize();
 	int n_pre_cut = params.get<int>("n");
+	int dn = params.get<int>("dn");
 	int n_post_cut = cut_params.get<int>("n");
 	assert(n_post_cut > 0);
-	int lower_bnd = boundary_change;
-	int upper_bnd = n_pre_cut - boundary_change;
+	int lower_bnd = 2*dn;
+	int upper_bnd = n_pre_cut - 2*dn;
 
 	// Loop through relevant points inside of the pre-cut array
 	int i_post_cut, j_post_cut, k_post_cut;

@@ -153,14 +153,15 @@ int main(int argc, char *argv[]) {
 	calculate_and_save_fields_from_overdensity(overdensity, params, write_to_file, 
 											   write_out, true);
 	
-	int dn = 10;
-	int smallest_box = 10;
+	int dn = params.get<int>("dn");
+	int smallest_box = params.get<int>("min_n");
 	int num_boundary_cutoffs = n / dn;
 	for (int i=0; i<num_boundary_cutoffs; i++) {
 		int n_cut = params.get<int>("n") - 2*dn;
 		if (n_cut > smallest_box) {
 			REAL *overdensity_cut = new REAL[n_cut*n_cut*n_cut];
-			Parameters cut_params = cut_boundaries(overdensity, overdensity_cut, params, dn);
+			Parameters cut_params = cut_boundaries(overdensity, overdensity_cut, 
+												   params);
 			calculate_and_save_fields_from_overdensity(overdensity_cut, cut_params, 
 													   write_to_file, write_out,
 													   false);
@@ -170,7 +171,6 @@ int main(int argc, char *argv[]) {
 		}
 	}
 	
-	// Clean up
 	delete[] overdensity; 
 	
 	return 0;

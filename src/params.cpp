@@ -10,8 +10,10 @@
 
 Parameters::Parameters(){};
 Parameters::Parameters(const Parameters &obj) {
-	n = obj.n;
-	seed = obj.seed;
+	n       = obj.n;
+	dn      = obj.dn;
+	min_n   = obj.min_n;
+	seed    = obj.seed;
 	boxsize = obj.boxsize;
 	Omega_m = obj.Omega_m;
 	h = obj.h;
@@ -19,6 +21,8 @@ Parameters::Parameters(const Parameters &obj) {
 }
 Parameters::Parameters(Parameters&& obj) noexcept {
     n       = obj.n;        // No std::move needed for primitives
+	dn      = obj.dn;
+	min_n   = obj.min_n;
     seed    = obj.seed;
     boxsize = obj.boxsize;
     Omega_m = obj.Omega_m;
@@ -28,6 +32,8 @@ Parameters::Parameters(Parameters&& obj) noexcept {
 Parameters& Parameters::operator=(const Parameters& obj) {
     if (this != &obj) {     // Self-assignment check
         n       = obj.n;
+		dn      = obj.dn;
+		min_n   = obj.min_n;
         seed    = obj.seed;
         boxsize = obj.boxsize;
         Omega_m = obj.Omega_m;
@@ -39,6 +45,8 @@ Parameters& Parameters::operator=(const Parameters& obj) {
 Parameters& Parameters::operator=(const Parameters&& obj) noexcept {
     if (this != &obj) {     // Self-assignment check
         n       = obj.n;
+		dn      = obj.dn;
+		min_n   = obj.min_n;
         seed    = obj.seed;
         boxsize = obj.boxsize;
         Omega_m = obj.Omega_m;
@@ -51,6 +59,10 @@ Parameters& Parameters::operator=(const Parameters&& obj) noexcept {
 void Parameters::set_value(std::string var_name, std::string var_value) {
 	if (var_name == "n") {
 		n = stoi(var_value);
+	} else if (var_name == "dn") {
+		dn = stoi(var_value);
+	} else if (var_name == "min_n") {
+		min_n = stoi(var_value);
 	} else if (var_name == "seed") {
 		seed = stoi(var_value);
 	} else if (var_name == "boxsize") {
@@ -64,8 +76,8 @@ void Parameters::set_value(std::string var_name, std::string var_value) {
 void Parameters::set_seed(int seed) {
 	seed = seed;
 }
-void Parameters::reduce_meshsize(int dn) {
-	n -= dn;
+void Parameters::reduce_meshsize() {
+	n -= 2*dn;
 	calculate_derived_params();
 }
 void Parameters::read_params_from_file(const char* filename) {
