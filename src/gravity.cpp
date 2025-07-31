@@ -53,10 +53,11 @@ void calculate_and_save_fields_from_overdensity(REAL* overdensity,
 												Parameters params,
 												bool print_header) {
 	int n = params.get<int>("n");
-	bool write_to_file = params.get<bool>("write_fields_to_files");
+	int n_eff = params.get<int>("n_eff");
+	int write_to_file = params.get<int>("write_fields_to_files");
 	bool write_output  = params.get<bool>("output_logs");
 	std::string postfix = ".";
-	postfix.append(std::to_string(n));
+	postfix.append(std::to_string(n_eff));
 	REAL *grav_potential = new REAL[n*n*n];
 	TensorField<REAL> TidalTensor(n, n, n, true);
 
@@ -85,7 +86,7 @@ void calculate_and_save_fields_from_overdensity(REAL* overdensity,
 	renormalize_post_fft_array(overdensity, n);
 	renormalize_post_fft_array(grav_potential, n);
 
-	if (write_to_file==true) {
+	if (write_to_file==1) {
 		std::string overdensity_fname = "out/overdensity";
 		std::string potential_fname   = "out/potential";
 		overdensity_fname.append(postfix).append(".bin");
@@ -93,7 +94,7 @@ void calculate_and_save_fields_from_overdensity(REAL* overdensity,
 	
 		write_field_to_binary_file(overdensity,    n, overdensity_fname, write_output);
 		write_field_to_binary_file(grav_potential, n, potential_fname,   write_output);
-		TidalTensor.write_tensor_to_binary_files(postfix, write_output);
+		TidalTensor.write_tensor_to_binary_files(n_eff, postfix, write_output);
 	}
 	int center_idx = n/2 * ( n * n + n + 1 );
 	if (print_header==true) 

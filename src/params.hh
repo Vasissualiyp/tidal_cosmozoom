@@ -19,6 +19,7 @@ public:
 	T get(const std::string& param_name) {
 		if constexpr (std::is_same_v<T, int>) {
 			if (param_name == "n") return n;
+			if (param_name == "n_eff") return n_eff;
 			if (param_name == "dn") return dn;
 			if (param_name == "padding") return padding;
 			if (param_name == "min_n") return min_n;
@@ -42,7 +43,7 @@ public:
 		throw std::invalid_argument("Unknown parameter: " + param_name);
 	}
 private:
-	int n, seed, dn, padding, min_n, current_padding;
+	int n, n_eff, seed, dn, padding, min_n, current_padding;
 	int print_array, output_logs, write_fields_to_files;
 	REAL boxsize, Omega_m, h, dk, dL;
 	void set_value(std::string var_name, std::string var_value);

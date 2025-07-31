@@ -41,10 +41,18 @@ int main(int argc, char *argv[]) {
 		if (n_cut > smallest_box) {
 			REAL *overdensity_cut = new REAL[n_cut*n_cut*n_cut];
 			REAL *overdensity_pad = new REAL[n_pad*n_pad*n_pad];
-			Parameters cut_params = cut_boundaries(overdensity, overdensity_cut, 
-												   params);
-			Parameters pad_params = cut_boundaries(overdensity_cut, overdensity_pad, 
-												   cut_params);
+
+			Parameters cut_params = cut_boundaries(overdensity, overdensity_cut, params);
+			int* max_loc = find_loc_of_max_in_array(overdensity_cut, n_cut, true);
+			int* min_loc = find_loc_of_max_in_array(overdensity_cut, n_cut, false);
+			int idx_max = max_loc[0] * n_cut * n_cut + max_loc[1] * n_cut + max_loc[2];
+			int idx_min = min_loc[0] * n_cut * n_cut + min_loc[1] * n_cut + min_loc[2];
+			REAL max_arr = overdensity_cut[idx_max];
+			REAL min_arr = overdensity_cut[idx_min];
+			REAL mid_arr = (max_arr - min_arr) / 2;
+			Parameters pad_params = pad_boundaries(overdensity_cut, overdensity_pad, 
+												   cut_params, mid_arr);
+
 			delete[] overdensity;
 			delete[] overdensity_cut;
 			calculate_and_save_fields_from_overdensity(overdensity_pad, pad_params);

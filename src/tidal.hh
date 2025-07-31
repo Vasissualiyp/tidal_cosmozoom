@@ -103,7 +103,7 @@ public:
 		return idx;
 	}
 
-	void write_tensor_to_binary_files(std::string postfix = "", bool write_output = true) {
+	void write_tensor_to_binary_files(int n_eff, std::string postfix = "", bool write_output = true) {
 		for (int i=0; i<num_components; i++) {
 		    std::string extension = ".bin";
 		    std::string prefix = "out/T";
@@ -111,7 +111,7 @@ public:
 			int idx = tensor_idx_from_component_id(i);
 			T* pointer = ptr_by_id_in_tensor(idx);
 			std::string fname = prefix.append(subscript).append(postfix).append(extension);
-			write_field_to_binary_file(pointer, nx, fname, write_output);
+			write_field_to_binary_file(pointer, n_eff, fname, write_output);
 		}
 	}
 

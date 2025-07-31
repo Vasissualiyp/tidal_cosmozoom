@@ -14,6 +14,7 @@ Parameters::Parameters(const Parameters &obj) {
 	current_padding = obj.current_padding;
 	n           = obj.n;
 	dn          = obj.dn;
+	n_eff       = obj.n_eff;
 	padding     = obj.padding;
 	min_n       = obj.min_n;
 	seed        = obj.seed;
@@ -29,6 +30,7 @@ Parameters::Parameters(Parameters&& obj) noexcept {
 	current_padding = obj.current_padding;
     n           = obj.n;        // No std::move needed for primitives
 	dn          = obj.dn;
+	n_eff       = obj.n_eff;
 	padding     = obj.padding;
 	min_n       = obj.min_n;
     seed        = obj.seed;
@@ -45,6 +47,7 @@ Parameters& Parameters::operator=(const Parameters& obj) {
 		current_padding = obj.current_padding;
         n           = obj.n;
 		dn          = obj.dn;
+		n_eff       = obj.n_eff;
 		padding     = obj.padding;
 		min_n       = obj.min_n;
         seed        = obj.seed;
@@ -63,6 +66,7 @@ Parameters& Parameters::operator=(const Parameters&& obj) noexcept {
 		current_padding = obj.current_padding;
         n           = obj.n;
 		dn          = obj.dn;
+		n_eff       = obj.n_eff;
 		padding     = obj.padding;
 		min_n       = obj.min_n;
         seed        = obj.seed;
@@ -81,6 +85,8 @@ void Parameters::set_value(std::string var_name, std::string var_value) {
 		n = stoi(var_value);
 	} else if (var_name == "dn") {
 		dn = stoi(var_value);
+	} else if (var_name == "n_eff") {
+		n_eff = stoi(var_value);
 	} else if (var_name == "padding") {
 		padding = stoi(var_value);
 	} else if (var_name == "current_padding") {
@@ -107,11 +113,12 @@ void Parameters::set_seed(int seed) {
 	seed = seed;
 }
 void Parameters::reduce_meshsize() {
+	n_eff = n_eff - 2*dn;
 	n -= 2*(dn + current_padding);
 	calculate_derived_params();
 }
 void Parameters::increase_meshsize() {
-	n += 2*padding;
+	n += 2*(current_padding + padding);
 	current_padding += padding;
 	calculate_derived_params();
 }
@@ -133,6 +140,7 @@ void Parameters::read_params_from_file(const char* filename) {
 	}
 	f.close();
 	current_padding = 0;
+	n_eff = n;
 	calculate_derived_params();
 }
 void Parameters::calculate_derived_params() {
