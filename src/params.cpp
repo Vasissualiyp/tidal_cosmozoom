@@ -13,6 +13,7 @@ Parameters::Parameters(const Parameters &obj) {
 	write_fields_to_files = obj.write_fields_to_files;
 	current_padding = obj.current_padding;
 	num_bnd_cutoffs = obj.num_bnd_cutoffs;
+	pad_with_box_avg = obj.pad_with_box_avg;
 	n           = obj.n;
 	dn          = obj.dn;
 	n_eff       = obj.n_eff;
@@ -30,6 +31,7 @@ Parameters::Parameters(Parameters&& obj) noexcept {
     write_fields_to_files = obj.write_fields_to_files;
 	current_padding = obj.current_padding;
 	num_bnd_cutoffs = obj.num_bnd_cutoffs;
+    pad_with_box_avg = obj.pad_with_box_avg;
     n           = obj.n;        // No std::move needed for primitives
 	dn          = obj.dn;
 	n_eff       = obj.n_eff;
@@ -48,6 +50,7 @@ Parameters& Parameters::operator=(const Parameters& obj) {
         write_fields_to_files = obj.write_fields_to_files;
 		current_padding = obj.current_padding;
 		num_bnd_cutoffs = obj.num_bnd_cutoffs;
+        pad_with_box_avg = obj.pad_with_box_avg;
         n           = obj.n;
 		dn          = obj.dn;
 		n_eff       = obj.n_eff;
@@ -68,6 +71,7 @@ Parameters& Parameters::operator=(const Parameters&& obj) noexcept {
         write_fields_to_files = obj.write_fields_to_files;
 		current_padding = obj.current_padding;
 		num_bnd_cutoffs = obj.num_bnd_cutoffs;
+        pad_with_box_avg = obj.pad_with_box_avg;
         n           = obj.n;
 		dn          = obj.dn;
 		n_eff       = obj.n_eff;
@@ -95,6 +99,8 @@ void Parameters::set_value(std::string var_name, std::string var_value) {
 		min_n = stoi(var_value);
 	} else if (var_name == "seed") {
 		seed = stoi(var_value);
+	} else if (var_name == "pad_with_box_avg") {
+		pad_with_box_avg = stoi(var_value);
 	} else if (var_name == "write_fields_to_files") {
 		write_fields_to_files = stoi(var_value);
 	} else if (var_name == "output_logs") {

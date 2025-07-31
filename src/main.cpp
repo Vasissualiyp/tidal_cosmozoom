@@ -6,22 +6,29 @@ void perform_cutting_and_padding(REAL*& overdensity, Parameters& params) {
 	int dn = params.get<int>("dn");
 	int padding = params.get<int>("padding");
 	int current_pad = params.get<int>("current_padding");
+	int padding_value_is_box_average = params.get<int>("pad_with_box_avg");
 	int n_cut = params.get<int>("n") - 2*(dn + current_pad);
 	int n_pad = n_cut + 2*(padding + current_pad);
+	REAL padding_value;
 	if (n_cut >= params.get<int>("min_n")) {
 		REAL *overdensity_cut = new REAL[n_cut*n_cut*n_cut];
 		REAL *overdensity_pad = new REAL[n_pad*n_pad*n_pad];
 
 		Parameters cut_params = cut_boundaries(overdensity, overdensity_cut, params);
-		int* max_loc = find_loc_of_max_in_array(overdensity_cut, n_cut, true);
-		int* min_loc = find_loc_of_max_in_array(overdensity_cut, n_cut, false);
-		int idx_max = max_loc[0] * n_cut * n_cut + max_loc[1] * n_cut + max_loc[2];
-		int idx_min = min_loc[0] * n_cut * n_cut + min_loc[1] * n_cut + min_loc[2];
-		REAL max_arr = overdensity_cut[idx_max];
-		REAL min_arr = overdensity_cut[idx_min];
-		REAL mid_arr = (max_arr - min_arr) / 2;
+
+		if (padding_value_is_box_average==1) {
+			int* max_loc = find_loc_of_max_in_array(overdensity_cut, n_cut, true);
+			int* min_loc = find_loc_of_max_in_array(overdensity_cut, n_cut, false);
+			int idx_max = max_loc[0] * n_cut * n_cut + max_loc[1] * n_cut + max_loc[2];
+			int idx_min = min_loc[0] * n_cut * n_cut + min_loc[1] * n_cut + min_loc[2];
+			REAL max_arr = overdensity_cut[idx_max];
+			REAL min_arr = overdensity_cut[idx_min];
+			padding_value = (max_arr - min_arr) / 2;
+		} else {
+			padding_value = 0.0;
+		}
 		Parameters pad_params = pad_boundaries(overdensity_cut, overdensity_pad, 
-											   cut_params, mid_arr);
+											   cut_params, padding_value);
 
 		delete[] overdensity;
 		delete[] overdensity_cut;

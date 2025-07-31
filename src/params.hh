@@ -25,6 +25,7 @@ public:
 			if (param_name == "padding") return padding;
 			if (param_name == "min_n") return min_n;
 			if (param_name == "seed") return seed;
+			if (param_name == "pad_with_box_avg") return pad_with_box_avg;
 			if (param_name == "current_padding") return current_padding;
 			if (param_name == "output_logs") return output_logs;
 			if (param_name == "write_fields_to_files") return write_fields_to_files;
@@ -41,7 +42,7 @@ public:
 	}
 private:
 	int n, n_eff, seed, dn, padding, min_n, current_padding, num_bnd_cutoffs;
-	int print_array, output_logs, write_fields_to_files;
+	int print_array, output_logs, write_fields_to_files, pad_with_box_avg;
 	REAL boxsize, Omega_m, h, dk, dL;
 	void set_value(std::string var_name, std::string var_value);
 	void calculate_derived_params();
