@@ -61,6 +61,9 @@ void Parameters::set_value(std::string var_name, std::string var_value) {
 		h = STRTOREAL(var_value);
 	}
 }
+void Parameters::set_seed(int seed) {
+	seed = seed;
+}
 void Parameters::reduce_meshsize(int dn) {
 	n -= dn;
 	calculate_derived_params();

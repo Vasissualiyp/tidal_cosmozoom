@@ -115,6 +115,25 @@ public:
 		}
 	}
 
+	void print_tensor_table_at_loc(int idx) {
+		std::cout << nx;
+		for (int i=0; i<num_components; i++) {
+			int component_idx = tensor_idx_from_component_id(i);
+			T T_value = access_by_id_in_tensor(idx, component_idx);
+			std::cout << "," << T_value;
+		}
+		std::cout << std::endl;
+	}
+
+	void print_tensor_table_header() {
+		std::cout << "n";
+		for (int i=0; i<num_components; i++) {
+			std::string subscript = subscripts[i];
+			std::cout << ",T" << subscript;
+		}
+		std::cout << std::endl;
+	}
+
 	int get_num_components() { return num_components; }
 
 private:

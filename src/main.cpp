@@ -14,7 +14,8 @@
 void calculate_and_save_fields_from_overdensity(REAL* overdensity, 
 												Parameters params,
 												bool write_to_file,
-												bool write_output) {
+												bool write_output,
+												bool print_header=false) {
 	int n = params.get<int>("n");
 	std::string postfix = ".";
 	postfix.append(std::to_string(n));
@@ -56,6 +57,10 @@ void calculate_and_save_fields_from_overdensity(REAL* overdensity,
 		write_field_to_binary_file(grav_potential, n, potential_fname,   write_output);
 		TidalTensor.write_tensor_to_binary_files(postfix, write_output);
 	}
+	int center_idx = n/2 * ( n * n + n + 1 );
+	if (print_header==true) 
+		TidalTensor.print_tensor_table_header();
+	TidalTensor.print_tensor_table_at_loc(center_idx);
 
 	FFTW::destroy_plan(plan);
 	FFTW::destroy_plan(iplan_dens);
@@ -91,14 +96,23 @@ int main(int argc, char *argv[]) {
 	bool write_to_file = false;
 	bool write_out = false;
 	const char* filename;
+	int seed;
 
 	// CLI: pass path to the parameter file and read the file
-	if (argc < 2)
+	if (argc < 2) {
 		filename = "params.txt";
-	else
+		seed = 0;
+	} else if (argc == 2) {
 		filename = argv[1];
+		seed = 0;
+	} else {
+		filename = argv[1];
+		seed = atoi(argv[2]);
+	}
 	Parameters params;
 	params.read_params_from_file(filename);
+	if (seed != 0)
+		params.set_seed(seed);
 
 	// Random number generation
 	std::mt19937 rand_gen(params.get<int>("seed"));
@@ -136,7 +150,8 @@ int main(int argc, char *argv[]) {
 	FFTW::destroy_plan(plan);
 	FFTW::destroy_plan(iplan_dens);
 
-	calculate_and_save_fields_from_overdensity(overdensity, params, write_to_file, write_out);
+	calculate_and_save_fields_from_overdensity(overdensity, params, write_to_file, 
+											   write_out, true);
 	
 	int dn = 10;
 	int smallest_box = 10;
@@ -147,7 +162,8 @@ int main(int argc, char *argv[]) {
 			REAL *overdensity_cut = new REAL[n_cut*n_cut*n_cut];
 			Parameters cut_params = cut_boundaries(overdensity, overdensity_cut, params, dn);
 			calculate_and_save_fields_from_overdensity(overdensity_cut, cut_params, 
-													   write_to_file, write_out);
+													   write_to_file, write_out,
+													   false);
 			delete[] overdensity;
 			overdensity = overdensity_cut;
 			params = cut_params;

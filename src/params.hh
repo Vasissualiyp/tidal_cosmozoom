@@ -12,6 +12,7 @@ public:
   Parameters& operator=(const Parameters&& obj) noexcept;
   void read_params_from_file(const char* filename);
   void reduce_meshsize(int dn);
+  void set_seed(int seed);
   // Parameter getter template
   template<typename T>
   T get(const std::string& param_name) {
