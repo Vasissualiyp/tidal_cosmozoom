@@ -52,3 +52,12 @@ Parameters obtain_params_from_cli(int argc, char *argv[]) {
 	return params;
 }
 
+std::string contruct_Tij_table_fname(Parameters params) {
+	std::string fname="Tij";
+	std::string n       = std::to_string(params.get<int>("n"));
+	std::string seed    = std::to_string(params.get<int>("seed"));
+	std::string padding = std::to_string(params.get<int>("padding"));
+	fname = fname.append("_n").append(n).append("_padding").append(padding).append("_seed").append(seed).append(".csv");
+	return fname;
+
+}

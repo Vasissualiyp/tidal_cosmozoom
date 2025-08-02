@@ -49,9 +49,10 @@ int main(int argc, char *argv[]) {
 	generate_overdensity_field(overdensity, params);
 
 	// Write the Tij table for the full box
-	int prepend_header = 1;
-	std::ofstream output_stream("output.txt");
+	std::string tij_table_fname = contruct_Tij_table_fname(params);
+	std::ofstream output_stream(tij_table_fname);
 	if (output_stream.is_open()) {
+		int prepend_header = 1;
 		calculate_and_save_fields_from_overdensity(overdensity, params, output_stream, prepend_header);
 
 		// Cut the boundaries of the overdensity, and pad the box afterwards
