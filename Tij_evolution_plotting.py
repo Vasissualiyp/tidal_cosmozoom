@@ -41,12 +41,10 @@ padding = 0 # -1 for Full padding
 
 df = get_df_of_run_files()
 df_of_interest = df[(df.n == n) & (df.padding == padding)]
-ncols, nrows = 3, 2
-subplotsize=4
-figsize = (ncols+1)*subplotsize, (nrows+1)*subplotsize
 
 fig, axs = plt.subplots(ncols=ncols, nrows=nrows, figsize=figsize,
                         layout="constrained")
+
 # Assume df_of_interest.filepath is your list of file paths
 # Get Tij columns from the first file (assuming all files have the same structure)
 first_file_df = pd.read_csv(df_of_interest.filepath[0])
@@ -55,7 +53,9 @@ Tij_list = [c for c in first_file_df.columns if c[0] == "T"]
 # Define subplot grid parameters (adjust ncols as needed)
 ncols = 3  # Example: adjust based on number of Tij columns
 nrows = (len(Tij_list) + ncols - 1) // ncols  # Calculate rows needed
-fig, axs = plt.subplots(nrows, ncols, figsize=(15, 5 * nrows), sharex=True)
+subplotsize=4
+figsize = (ncols+1)*subplotsize, (nrows+1)*subplotsize
+fig, axs = plt.subplots(nrows, ncols, figsize=figsize, sharex=True)
 axs = np.array(axs).reshape(nrows, ncols)  # Ensure axs is 2D even if nrows=1
 # Dictionary to store Tij_ratio data for all files
 tij_ratio_data = {Tij: [] for Tij in Tij_list}
