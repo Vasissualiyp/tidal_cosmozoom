@@ -55,6 +55,8 @@ for i, Tij in enumerate(Tij_list):
     Tij_ratio = file_df[Tij]/file_df[Tij][0]
     col = i // ncols
     row = i % ncols
-    axs[col,row].plot(n_eff, Tij_ratio)
-    axs[col,row].plot(n_eff, np.ones(len(n_eff)))
+    subplot = axs[col, row]
+    subplot.set_title("$"+Tij + "/" + Tij + "_0$")
+    subplot.plot(n_eff, Tij_ratio, 'o')
+    subplot.plot(n_eff, np.ones(len(n_eff)))
 plt.show()
