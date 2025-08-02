@@ -35,9 +35,7 @@ void perform_cutting_and_padding(REAL*& overdensity, Parameters& params, std::of
 		calculate_and_save_fields_from_overdensity(overdensity_pad, pad_params, output_stream);
 		overdensity = overdensity_pad;
 		params = pad_params;
-		std::cout << "Performed the run with n_cut: " << n_cut << std::endl;
 	} else {
-		std::cout << "Skipped the run with n_cut: " << n_cut << std::endl;
 	}
 }
 
@@ -56,8 +54,6 @@ void obtain_Tij_table_for_single_realization(Parameters& params) {
 	if (output_stream.is_open()) {
 		int prepend_header = 1;
 		calculate_and_save_fields_from_overdensity(overdensity, params, output_stream, prepend_header);
-		int n_cut = params.get<int>("n");
-		std::cout << "Performed the run with n_cut: " << n_cut << std::endl;
 
 		// Cut the boundaries of the overdensity, and pad the box afterwards
 		int num_boundary_cutoffs = params.get<int>("num_bnd_cutoffs");
@@ -76,7 +72,6 @@ int main(int argc, char *argv[]) {
 	int initial_n = params.get<int>("n");
 	for (int i=0; i<num_of_realizations; i++) {
 		obtain_Tij_table_for_single_realization(params);
-		std::cout << "Finished calculating realization with seed " << params.get<int>("seed") << std::endl;
 		seed += 1;
 		params.set_seed(seed);
 		params.reset(initial_n);
