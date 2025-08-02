@@ -1,5 +1,5 @@
-n = 64
-dn = 5
+n = 128
+dn = 1
 min_n = 20
 padding = 0
 boxsize = 1000

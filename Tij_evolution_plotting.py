@@ -23,7 +23,7 @@ def get_df_of_run_files(tables_dir="tables"):
         n = int(get_param_from_fname_string(splits, "n"))
         padding = get_param_from_fname_string(splits, "padding")
         if padding == "Full":
-            padding = 0
+            padding = -1
         else:
             padding = int(padding)
         seed = int(get_param_from_fname_string(splits, "seed").split(".")[0])
@@ -35,5 +35,10 @@ def get_df_of_run_files(tables_dir="tables"):
     full_data_list = zip(*[ n_vals, padding_vals, seed_vals, file_paths ])
     return pd.DataFrame(full_data_list, columns=list_of_columns)
 
-df = get_df_of_run_files("tables")
-print(df)
+df = get_df_of_run_files()
+n = 128
+padding = 0 # -1 for Full padding
+df_of_interest = df[(df.n == n) & (df.padding == padding)]
+print(df_of_interest)
+file_df = pd.read_csv(df_of_interest.filepath[0])
+print(file_df)
