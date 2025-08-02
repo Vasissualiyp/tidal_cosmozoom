@@ -44,10 +44,11 @@ Parameters pad_boundaries(REAL* pre_pad_arr,
 	pad_params.increase_meshsize();
 	int n_pre_pad = params.get<int>("n");
 	int padding = params.get<int>("padding");
+	int current_pad = params.get<int>("current_padding");
 	int n_post_pad = pad_params.get<int>("n");
 	assert(n_post_pad > 0);
-	int lower_bnd = padding;
-	int upper_bnd = n_post_pad - padding -1;
+	int lower_bnd = padding + current_pad;
+	int upper_bnd = n_post_pad - padding - current_pad - 1;
 
 	// Loop through relevant points inside of the pre-pad array
 	int i_pre_pad, j_pre_pad, k_pre_pad;
