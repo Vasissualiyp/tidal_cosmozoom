@@ -1,4 +1,5 @@
 *.bin
+*.csv
 *.vtk
 *.vti
 main
