@@ -20,6 +20,7 @@ Parameters::Parameters(const Parameters &obj) {
 	padding     = obj.padding;
 	min_n       = obj.min_n;
 	seed        = obj.seed;
+	seeds_num   = obj.seeds_num;
 	output_logs = obj.output_logs;
 	print_array = obj.print_array;
 	boxsize     = obj.boxsize;
@@ -38,6 +39,7 @@ Parameters::Parameters(Parameters&& obj) noexcept {
 	padding     = obj.padding;
 	min_n       = obj.min_n;
     seed        = obj.seed;
+    seeds_num   = obj.seeds_num;
     output_logs = obj.output_logs;
     print_array = obj.print_array;
     boxsize     = obj.boxsize;
@@ -57,6 +59,7 @@ Parameters& Parameters::operator=(const Parameters& obj) {
 		padding     = obj.padding;
 		min_n       = obj.min_n;
         seed        = obj.seed;
+        seeds_num   = obj.seeds_num;
         output_logs = obj.output_logs;
         print_array = obj.print_array;
         boxsize     = obj.boxsize;
@@ -78,6 +81,7 @@ Parameters& Parameters::operator=(const Parameters&& obj) noexcept {
 		padding     = obj.padding;
 		min_n       = obj.min_n;
         seed        = obj.seed;
+        seeds_num   = obj.seeds_num;
         output_logs = obj.output_logs;
         print_array = obj.print_array;
         boxsize     = obj.boxsize;
@@ -99,6 +103,8 @@ void Parameters::set_value(std::string var_name, std::string var_value) {
 		min_n = stoi(var_value);
 	} else if (var_name == "seed") {
 		seed = stoi(var_value);
+	} else if (var_name == "seeds_num") {
+		seeds_num = stoi(var_value);
 	} else if (var_name == "pad_with_box_avg") {
 		pad_with_box_avg = stoi(var_value);
 	} else if (var_name == "write_fields_to_files") {
@@ -117,6 +123,11 @@ void Parameters::set_value(std::string var_name, std::string var_value) {
 }
 void Parameters::set_seed(int seed) {
 	seed = seed;
+}
+void Parameters::reset() {
+	current_padding = 0;
+	n_eff = n;
+	calculate_derived_params();
 }
 void Parameters::reduce_meshsize() {
 	n_eff = n_eff - 2*dn;
@@ -145,9 +156,7 @@ void Parameters::read_params_from_file(const char* filename) {
 		set_value(var_name, var_value);
 	}
 	f.close();
-	current_padding = 0;
-	n_eff = n;
-	calculate_derived_params();
+	reset();
 }
 void Parameters::calculate_derived_params() {
 	dL = boxsize / n;

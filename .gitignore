@@ -5,4 +5,5 @@
 main
 build/*
 bin/*
+tables/*
 out/*.bin

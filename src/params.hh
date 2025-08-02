@@ -14,6 +14,7 @@ public:
 	void reduce_meshsize();
 	void increase_meshsize();
 	void set_seed(int seed);
+	void reset();
 	// Parameter getter template
 	template<typename T>
 	T get(const std::string& param_name) {
@@ -25,6 +26,7 @@ public:
 			if (param_name == "padding") return padding;
 			if (param_name == "min_n") return min_n;
 			if (param_name == "seed") return seed;
+			if (param_name == "seeds_num") return seeds_num;
 			if (param_name == "pad_with_box_avg") return pad_with_box_avg;
 			if (param_name == "current_padding") return current_padding;
 			if (param_name == "output_logs") return output_logs;
@@ -41,7 +43,7 @@ public:
 		throw std::invalid_argument("Unknown parameter: " + param_name);
 	}
 private:
-	int n, n_eff, seed, dn, padding, min_n, current_padding, num_bnd_cutoffs;
+	int n, n_eff, seed, seeds_num, dn, padding, min_n, current_padding, num_bnd_cutoffs;
 	int print_array, output_logs, write_fields_to_files, pad_with_box_avg;
 	REAL boxsize, Omega_m, h, dk, dL;
 	void set_value(std::string var_name, std::string var_value);

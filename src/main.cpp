@@ -65,7 +65,15 @@ void obtain_Tij_table_for_single_realization(Parameters params) {
 
 int main(int argc, char *argv[]) {
 	Parameters params = obtain_params_from_cli(argc, argv);
-	obtain_Tij_table_for_single_realization(params);
+	int num_of_realizations = params.get<int>("seeds_num");
+	int seed = params.get<int>("seed");
+	for (int i=0; i<num_of_realizations; i++) {
+		obtain_Tij_table_for_single_realization(params);
+		std::cout << "Finished calculating realization with seed " << seed << std::endl;
+		seed += 1;
+		params.set_seed(seed);
+		params.reset();
+	}
 	
 	return 0;
 }
