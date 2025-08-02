@@ -13,8 +13,8 @@ public:
 	void read_params_from_file(const char* filename);
 	void reduce_meshsize();
 	void increase_meshsize();
-	void set_seed(int seed);
-	void reset();
+	void set_seed(int new_seed);
+	void reset(int initial_n);
 	// Parameter getter template
 	template<typename T>
 	T get(const std::string& param_name) {

@@ -121,12 +121,13 @@ void Parameters::set_value(std::string var_name, std::string var_value) {
 		h = STRTOREAL(var_value);
 	}
 }
-void Parameters::set_seed(int seed) {
-	seed = seed;
+void Parameters::set_seed(int new_seed) {
+	seed = new_seed;
 }
-void Parameters::reset() {
+void Parameters::reset(int initial_n) {
 	current_padding = 0;
-	n_eff = n;
+	n = initial_n;
+	n_eff = initial_n;
 	calculate_derived_params();
 }
 void Parameters::reduce_meshsize() {
@@ -156,12 +157,12 @@ void Parameters::read_params_from_file(const char* filename) {
 		set_value(var_name, var_value);
 	}
 	f.close();
-	reset();
+	reset(n);
 }
 void Parameters::calculate_derived_params() {
 	dL = boxsize / n;
 	dk = 2.0 * M_PI / boxsize;
-	num_bnd_cutoffs = n / dn;
+	num_bnd_cutoffs = int((n - min_n) / dn / 2);
 }
 std::string Parameters::erase_spaces_in_str(std::string s) {
 s.erase(std::remove_if(s.begin(), s.end(),

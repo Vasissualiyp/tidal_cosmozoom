@@ -35,10 +35,13 @@ void perform_cutting_and_padding(REAL*& overdensity, Parameters& params, std::of
 		calculate_and_save_fields_from_overdensity(overdensity_pad, pad_params, output_stream);
 		overdensity = overdensity_pad;
 		params = pad_params;
+		std::cout << "Performed the run with n_cut: " << n_cut << std::endl;
+	} else {
+		std::cout << "Skipped the run with n_cut: " << n_cut << std::endl;
 	}
 }
 
-void obtain_Tij_table_for_single_realization(Parameters params) {
+void obtain_Tij_table_for_single_realization(Parameters& params) {
 	int n = params.get<int>("n");
 
     // Generate the overdensity field by convolution of white noise with the
@@ -53,6 +56,8 @@ void obtain_Tij_table_for_single_realization(Parameters params) {
 	if (output_stream.is_open()) {
 		int prepend_header = 1;
 		calculate_and_save_fields_from_overdensity(overdensity, params, output_stream, prepend_header);
+		int n_cut = params.get<int>("n");
+		std::cout << "Performed the run with n_cut: " << n_cut << std::endl;
 
 		// Cut the boundaries of the overdensity, and pad the box afterwards
 		int num_boundary_cutoffs = params.get<int>("num_bnd_cutoffs");
@@ -60,6 +65,7 @@ void obtain_Tij_table_for_single_realization(Parameters params) {
 			perform_cutting_and_padding(overdensity, params, output_stream);
 		}
 		output_stream.close();
+		std::cout << "Saved the output to: " << tij_table_fname << std::endl;
 	}
 }
 
@@ -67,12 +73,13 @@ int main(int argc, char *argv[]) {
 	Parameters params = obtain_params_from_cli(argc, argv);
 	int num_of_realizations = params.get<int>("seeds_num");
 	int seed = params.get<int>("seed");
+	int initial_n = params.get<int>("n");
 	for (int i=0; i<num_of_realizations; i++) {
 		obtain_Tij_table_for_single_realization(params);
-		std::cout << "Finished calculating realization with seed " << seed << std::endl;
+		std::cout << "Finished calculating realization with seed " << params.get<int>("seed") << std::endl;
 		seed += 1;
 		params.set_seed(seed);
-		params.reset();
+		params.reset(initial_n);
 	}
 	
 	return 0;

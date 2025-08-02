@@ -1,7 +1,7 @@
 n = 64
-dn = 1
+dn = 5
 min_n = 20
-padding = 1
+padding = 0
 boxsize = 1000
 seed = 12346
 seeds_num = 10
