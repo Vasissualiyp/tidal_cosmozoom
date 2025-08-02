@@ -57,6 +57,7 @@ std::string contruct_Tij_table_fname(Parameters params) {
 	std::string padding = "_padding";
 	std::string n       = "_n";
 	std::string seed    = "_seed";
+	std::string boxsize = "_boxsize";
 	int padding_int = params.get<int>("padding");
 	int cut_int = params.get<int>("dn");
 	if (padding_int == 0) {
@@ -68,7 +69,8 @@ std::string contruct_Tij_table_fname(Parameters params) {
 	}
 	n       = n.append(std::to_string(params.get<int>("n")));
 	seed    = seed.append(std::to_string(params.get<int>("seed")));
-	fname = fname.append(n).append(padding).append(seed).append(".csv");
+	boxsize = boxsize.append(std::to_string(params.get<REAL>("boxsize")));
+	fname = fname.append(n).append(padding).append(boxsize).append(seed).append(".csv");
 	return fname;
 
 }
