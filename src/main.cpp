@@ -2,7 +2,7 @@
 #include "gravity.hh"
 #include "arrays.hh"
 
-void perform_cutting_and_padding(REAL*& overdensity, Parameters& params) {
+void perform_cutting_and_padding(REAL*& overdensity, Parameters& params, std::ofstream output_stream) {
 	int dn = params.get<int>("dn");
 	int padding = params.get<int>("padding");
 	int current_pad = params.get<int>("current_padding");
@@ -32,7 +32,7 @@ void perform_cutting_and_padding(REAL*& overdensity, Parameters& params) {
 
 		delete[] overdensity;
 		delete[] overdensity_cut;
-		calculate_and_save_fields_from_overdensity(overdensity_pad, pad_params);
+		calculate_and_save_fields_from_overdensity(overdensity_pad, pad_params, output_stream);
 		overdensity = overdensity_pad;
 		params = pad_params;
 	}
@@ -50,12 +50,16 @@ int main(int argc, char *argv[]) {
 
 	// Write the Tij table for the full box
 	int prepend_header = 1;
-	calculate_and_save_fields_from_overdensity(overdensity, params, prepend_header);
+	std::ofstream output_stream("output.txt");
+	if (output_stream.is_open()) {
+		calculate_and_save_fields_from_overdensity(overdensity, params, prepend_header, output_stream);
 
-	// Cut the boundaries of the overdensity, and pad the box afterwards
-	int num_boundary_cutoffs = params.get<int>("num_bnd_cutoffs");
-	for (int i=0; i<num_boundary_cutoffs; i++) {
-		perform_cutting_and_padding(overdensity, params);
+		// Cut the boundaries of the overdensity, and pad the box afterwards
+		int num_boundary_cutoffs = params.get<int>("num_bnd_cutoffs");
+		for (int i=0; i<num_boundary_cutoffs; i++) {
+			perform_cutting_and_padding(overdensity, params, output_stream);
+		}
+		output_stream.close();
 	}
 	
 	return 0;

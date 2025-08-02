@@ -51,6 +51,7 @@ void solve_poisson_in_fourier_space(FFTW::complex_type* overdensity_fft,
 
 void calculate_and_save_fields_from_overdensity(REAL* overdensity, 
 												Parameters params,
+												std::ostream& output_stream, 
 												int print_header) {
 	int n = params.get<int>("n");
 	int n_eff = params.get<int>("n_eff");
