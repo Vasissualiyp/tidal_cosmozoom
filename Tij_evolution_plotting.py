@@ -22,7 +22,7 @@ def get_df_of_run_files(tables_dir="tables"):
     for file in files:
         splits = file.split("_")[1:] # Discratd "Tij_" split
         n = int(get_param_from_fname_string(splits, "n"))
-        boxsize = int(get_param_from_fname_string(splits, "boxsize"))
+        boxsize = float(get_param_from_fname_string(splits, "boxsize"))
         padding = get_param_from_fname_string(splits, "padding")
         if padding == "Full":
             padding = -1
@@ -38,28 +38,7 @@ def get_df_of_run_files(tables_dir="tables"):
     full_data_list = zip(*[ n_vals, padding_vals, boxsizes,  seed_vals, file_paths ])
     return pd.DataFrame(full_data_list, columns=list_of_columns)
 
-# Run parameters that we care about
-n = 128
-padding = 0 # -1 for Full padding
-
-df = get_df_of_run_files()
-df_of_interest_128 = df[(df.n == 128) & (df.padding == padding)]
-df_of_interest_64  = df[(df.n == 64)  & (df.padding == padding)]
-
-# Assume df_of_interest_128.filepath is your list of file paths
-# Get Tij columns from the first file (assuming all files have the same structure)
-first_file_df = pd.read_csv(df_of_interest_128.filepath[0])
-Tij_list = [c for c in first_file_df.columns if c[0] == "T"]
-
-# Define subplot grid parameters (adjust ncols as needed)
-ncols = 3  # Example: adjust based on number of Tij columns
-nrows = (len(Tij_list) + ncols - 1) // ncols  # Calculate rows needed
-subplotsize=4
-figsize = (ncols+1)*subplotsize, (nrows+1)*subplotsize
-fig, axs = plt.subplots(nrows, ncols, figsize=figsize, sharex=True)
-axs = np.array(axs).reshape(nrows, ncols)  # Ensure axs is 2D even if nrows=1
-
-def plot_mean_std_plot_for_runs(df_of_interest, axs, color, n, boxsize, label, plot_init):
+def plot_mean_std_plot_for_runs(df_of_interest, axs, color, n, boxsize, label, plot_init=True):
 
     cellsize = boxsize / n
     first_file_df = pd.read_csv(df_of_interest.filepath.iloc[0])
@@ -82,7 +61,7 @@ def plot_mean_std_plot_for_runs(df_of_interest, axs, color, n, boxsize, label, p
         
         # Calculate mean and standard deviation across files for each n_eff
         mean_ratio = tij_ratio_df.mean(axis=1)
-        std_ratio = tij_ratio_df.std(axis=1)
+        std_ratio  = tij_ratio_df.std(axis=1)
         
         # Get n_eff from the first file (same for all files)
         n_eff = first_file_df.n_eff
@@ -96,7 +75,7 @@ def plot_mean_std_plot_for_runs(df_of_interest, axs, color, n, boxsize, label, p
         subplot.plot(n_eff*cellsize, mean_ratio, label=label, color=color)
         # Plot shaded region for mean ± standard deviation
         subplot.fill_between(n_eff*cellsize, mean_ratio - std_ratio, mean_ratio + std_ratio, 
-                             alpha=0.3, color=color)#, label='$\pm 1\sigma$')
+                             alpha=0.3, color=color) #, label='$\pm 1\sigma$')
         # Add reference line at y=1
         if plot_init:
             subplot.plot(n_eff*cellsize, np.ones(len(n_eff)), 'k--', alpha=0.5)
@@ -107,10 +86,35 @@ def plot_mean_std_plot_for_runs(df_of_interest, axs, color, n, boxsize, label, p
         #subplot.set_ylabel('Ratio')
         subplot.legend()
 
+# Run parameters that we care about
+padding = 0 # -1 for Full padding
 boxsize = 1000
-plot_mean_std_plot_for_runs(df_of_interest_128, axs, "blue", 128, boxsize, "128 cells", True)
-plot_mean_std_plot_for_runs(df_of_interest_64,  axs, "red",  64,  boxsize, "64 cells", False)
+eps = 1e-10
 
+df = get_df_of_run_files()
+df_of_interest_256 = df[(df.n == 256) & (df.padding == padding) & (abs(df.boxsize - boxsize)/boxsize < eps)]
+df_of_interest_128 = df[(df.n == 128) & (df.padding == padding) & (abs(df.boxsize - boxsize)/boxsize < eps)]
+df_of_interest_64  = df[(df.n == 64)  & (df.padding == padding) & (abs(df.boxsize - boxsize)/boxsize < eps)]
+
+boxsize = 1000
+minx = 400
+# Define subplot grid parameters (adjust ncols as needed)
+ncols, nrows = 3, 2
+subplotsize=4
+figsize = (ncols+1)*subplotsize, (nrows+1)*subplotsize
+fig, axs = plt.subplots(nrows, ncols, figsize=figsize, sharex=True)
+axs = np.array(axs).reshape(nrows, ncols)  # Ensure axs is 2D even if nrows=1
+
+plot_mean_std_plot_for_runs(df_of_interest_256, axs, "blue",  256, boxsize, "256 cells", True )
+plot_mean_std_plot_for_runs(df_of_interest_128, axs, "green", 128, boxsize, "128 cells")
+plot_mean_std_plot_for_runs(df_of_interest_64,  axs, "red",   64,  boxsize, "64 cells")
+
+for i in range(ncols*nrows):
+    axis = axs[i//ncols, i%ncols]
+    axis.set_xlim([minx, boxsize])
+    axis.relim()
+    axis.autoscale()
+    
 # Adjust layout and display
 plt.tight_layout()
 plt.show()
