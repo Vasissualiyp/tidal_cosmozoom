@@ -2,7 +2,7 @@
 #include "gravity.hh"
 #include "arrays.hh"
 
-void perform_cutting_and_padding(REAL*& overdensity, Parameters& params, std::ofstream output_stream) {
+void perform_cutting_and_padding(REAL*& overdensity, Parameters& params, std::ofstream& output_stream) {
 	int dn = params.get<int>("dn");
 	int padding = params.get<int>("padding");
 	int current_pad = params.get<int>("current_padding");
@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
 	int prepend_header = 1;
 	std::ofstream output_stream("output.txt");
 	if (output_stream.is_open()) {
-		calculate_and_save_fields_from_overdensity(overdensity, params, prepend_header, output_stream);
+		calculate_and_save_fields_from_overdensity(overdensity, params, output_stream, prepend_header);
 
 		// Cut the boundaries of the overdensity, and pad the box afterwards
 		int num_boundary_cutoffs = params.get<int>("num_bnd_cutoffs");

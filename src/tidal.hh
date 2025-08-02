@@ -115,19 +115,20 @@ public:
 		}
 	}
 
-	void print_tensor_table_at_loc(int idx, int n) {
-		std::cout << nx;
-		std::cout << "," << n;
+	void print_tensor_table_at_loc(int idx, int n, std::ostream& output_stream) {
+		output_stream << nx;
+		output_stream << "," << n;
 		for (int i=0; i<num_components; i++) {
 			int component_idx = tensor_idx_from_component_id(i);
 			T T_value = access_by_id_in_tensor(idx, component_idx);
-			std::cout << "," << T_value;
+			output_stream << "," << T_value;
 		}
-		std::cout << std::endl;
+		output_stream << std::endl;
 	}
 
 	void print_tensor_table_header() {
 		std::cout << "n";
+		std::cout << ",n_eff";
 		for (int i=0; i<num_components; i++) {
 			std::string subscript = subscripts[i];
 			std::cout << ",T" << subscript;
