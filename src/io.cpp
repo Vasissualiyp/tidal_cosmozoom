@@ -53,11 +53,22 @@ Parameters obtain_params_from_cli(int argc, char *argv[]) {
 }
 
 std::string contruct_Tij_table_fname(Parameters params) {
-	std::string fname="Tij";
-	std::string n       = std::to_string(params.get<int>("n"));
-	std::string seed    = std::to_string(params.get<int>("seed"));
-	std::string padding = std::to_string(params.get<int>("padding"));
-	fname = fname.append("_n").append(n).append("_padding").append(padding).append("_seed").append(seed).append(".csv");
+	std::string fname="tables/Tij";
+	std::string padding = "_padding";
+	std::string n       = "_n";
+	std::string seed    = "_seed";
+	int padding_int = params.get<int>("padding");
+	int cut_int = params.get<int>("dn");
+	if (padding_int == 0) {
+		padding = "";
+	} else if (padding_int == cut_int) {
+		padding = padding.append("Full");
+	} else {
+		padding = padding.append(std::to_string(padding_int));
+	}
+	n       = n.append(std::to_string(params.get<int>("n")));
+	seed    = seed.append(std::to_string(params.get<int>("seed")));
+	fname = fname.append(n).append(padding).append(seed).append(".csv");
 	return fname;
 
 }

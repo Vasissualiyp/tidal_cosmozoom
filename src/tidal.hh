@@ -126,14 +126,14 @@ public:
 		output_stream << std::endl;
 	}
 
-	void print_tensor_table_header() {
-		std::cout << "n";
-		std::cout << ",n_eff";
+	void print_tensor_table_header(std::ostream& output_stream) {
+		output_stream << "n";
+		output_stream << ",n_eff";
 		for (int i=0; i<num_components; i++) {
 			std::string subscript = subscripts[i];
-			std::cout << ",T" << subscript;
+			output_stream << ",T" << subscript;
 		}
-		std::cout << std::endl;
+		output_stream << std::endl;
 	}
 
 	int get_num_components() { return num_components; }

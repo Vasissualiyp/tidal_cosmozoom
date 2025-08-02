@@ -38,8 +38,7 @@ void perform_cutting_and_padding(REAL*& overdensity, Parameters& params, std::of
 	}
 }
 
-int main(int argc, char *argv[]) {
-	Parameters params = obtain_params_from_cli(argc, argv);
+void obtain_Tij_table_for_single_realization(Parameters params) {
 	int n = params.get<int>("n");
 
     // Generate the overdensity field by convolution of white noise with the
@@ -62,6 +61,11 @@ int main(int argc, char *argv[]) {
 		}
 		output_stream.close();
 	}
+}
+
+int main(int argc, char *argv[]) {
+	Parameters params = obtain_params_from_cli(argc, argv);
+	obtain_Tij_table_for_single_realization(params);
 	
 	return 0;
 }
