@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 import numpy as np
 import os
     
@@ -11,7 +12,6 @@ def get_param_from_fname_string(list_of_splits, param_name) -> str:
     return value
 
 def get_df_of_run_files(tables_dir="tables"):
-    pass
     files = sorted([ f for f in os.listdir(tables_dir) if os.path.isfile(os.path.join(tables_dir, f)) ])
     
     n_vals = []
@@ -35,10 +35,26 @@ def get_df_of_run_files(tables_dir="tables"):
     full_data_list = zip(*[ n_vals, padding_vals, seed_vals, file_paths ])
     return pd.DataFrame(full_data_list, columns=list_of_columns)
 
-df = get_df_of_run_files()
+# Run parameters that we care about
 n = 128
 padding = 0 # -1 for Full padding
+
+df = get_df_of_run_files()
 df_of_interest = df[(df.n == n) & (df.padding == padding)]
-print(df_of_interest)
 file_df = pd.read_csv(df_of_interest.filepath[0])
-print(file_df)
+n_eff = file_df.n_eff
+
+ncols, nrows = 3, 2
+subplotsize=4
+figsize = (ncols+1)*subplotsize, (nrows+1)*subplotsize
+
+fig, axs = plt.subplots(ncols=ncols, nrows=nrows, figsize=figsize,
+                        layout="constrained")
+Tij_list = [c for c in file_df.columns if c[0]=="T"]
+for i, Tij in enumerate(Tij_list):
+    Tij_ratio = file_df[Tij]/file_df[Tij][0]
+    col = i // ncols
+    row = i % ncols
+    axs[col,row].plot(n_eff, Tij_ratio)
+    axs[col,row].plot(n_eff, np.ones(len(n_eff)))
+plt.show()
