@@ -95,6 +95,7 @@ df = get_df_of_run_files()
 df_of_interest_256 = df[(df.n == 256) & (df.padding == padding) & (abs(df.boxsize - boxsize)/boxsize < eps)]
 df_of_interest_128 = df[(df.n == 128) & (df.padding == padding) & (abs(df.boxsize - boxsize)/boxsize < eps)]
 df_of_interest_64  = df[(df.n == 64)  & (df.padding == padding) & (abs(df.boxsize - boxsize)/boxsize < eps)]
+df_of_interest_128_full = df[(df.n == 128)  & (df.padding == -1) & (abs(df.boxsize - boxsize)/boxsize < eps)]
 
 boxsize = 1000
 minx = 400
@@ -107,6 +108,7 @@ axs = np.array(axs).reshape(nrows, ncols)  # Ensure axs is 2D even if nrows=1
 
 plot_mean_std_plot_for_runs(df_of_interest_256, axs, "blue",  256, boxsize, "256 cells", True )
 plot_mean_std_plot_for_runs(df_of_interest_128, axs, "green", 128, boxsize, "128 cells")
+#plot_mean_std_plot_for_runs(df_of_interest_128_full, axs, "yellow", 128, boxsize, "128 cells, padded")
 plot_mean_std_plot_for_runs(df_of_interest_64,  axs, "red",   64,  boxsize, "64 cells")
 
 for i in range(ncols*nrows):
@@ -117,4 +119,5 @@ for i in range(ncols*nrows):
     
 # Adjust layout and display
 plt.tight_layout()
+plt.savefig("Tij_comparison.png")
 plt.show()
